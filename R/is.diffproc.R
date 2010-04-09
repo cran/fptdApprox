@@ -12,3 +12,4 @@ function (obj)
                 silent = TRUE), "try-error")))))
     return(FALSE)
 }
+

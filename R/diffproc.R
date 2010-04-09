@@ -34,3 +34,4 @@ function (text)
     class(out) <- c("diffproc", "list")
     return(out)
 }
+

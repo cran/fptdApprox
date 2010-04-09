@@ -1,4 +1,1 @@
-Wiener              Demo for the 'fptdApprox' package and the Wiener diffusion process.
-LogNormal           Demo for the 'fptdApprox' package and the Lognormal diffusion process.
-NewGompertz         Demo for the 'fptdApprox' package and a Gompertz type diffusion process.
-OrnsteinUhlenbeck   Demo for the 'fptdApprox' package and the Ornstein Uhlenbeck diffusion process.
+fptdApprox              Demo for the 'fptdApprox' package

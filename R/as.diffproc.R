@@ -3,3 +3,4 @@ function (text)
 {
     diffproc(text)
 }
+

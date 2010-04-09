@@ -3,3 +3,4 @@ function (obj, ...)
 {
     UseMethod("report")
 }
+

@@ -1,59 +1,67 @@
 is.fpt.density <-
 function (obj) 
 {
-    	if (inherits(obj, "fpt.density") & is.list(obj) & (length(obj) == 3L)){
-		if (all(sapply(obj[1:2], is.numeric)) & all(is.element(names(obj), c("x", "y", "y.x0"))) & all(is.element(names(attributes(obj)), 
-          	c("names", "Call", "Steps", "cumIntegral", "skips", "CPUTime", "summary.fptl", "class")))){
-			if (is.vector(obj$x) & is.vector(obj$y) & is.call(attr(obj, "Call")) & is.summary.fptl(attr(obj, "summary.fptl")) & is.matrix(attr(obj, "Steps")) & 
-			is.numeric(attr(obj, "Steps")) & is.numeric(attr(obj, "cumIntegral")) & is.list(attr(obj, "skips")) & is.matrix(attr(obj, "CPUTime")) & 
-			is.numeric(attr(obj, "CPUTime"))){
-				if ((length(obj$x) == length(obj$y)) & all(diff(attr(obj, "cumIntegral")) >= 0) & (length(attr(obj, "cumIntegral")) == length(attr(obj, "skips"))) & 
-				(length(attr(obj, "cumIntegral")) == nrow(attr(obj, "CPUTime"))) & (nrow(attr(obj, "Steps")) >= nrow(attr(obj, "CPUTime"))) & 
-                  	(ncol(attr(obj, "Steps")) == 3) & (ncol(attr(obj, "CPUTime")) == 2) & all(sapply(attr(obj, "skips"), is.integer))) {
-					Args <- as.list(attr(obj, "Call"))
-					f <- as.character(Args[[1]])
-					if (is.element(f, c("Approx.fpt.density", "Approx.cfpt.density"))){
-						if (f == "Approx.fpt.density"){
-							if (!is.null(obj$y.x0)){
-								if (is.numeric(obj$y.x0) & is.matrix(obj$y.x0)){
-									if ((length(obj$x) != nrow(obj$y.x0)) | (ncol(obj$y.x0) != (length(attr(obj, "summary.fptl")))) 
-										| any(obj$y.x0 < 0L)) return(FALSE)
-								}
-								else return(FALSE)
-							}
-							if (is.numeric(Args$id)) m <- 1L
-							else{
-								m <- Args$m
-								if (is.null(m)) m <- 100
-							}
-						}
-						else{						
-							if (!is.null(obj$y.x0)) return(FALSE)
-                  				m <- 1
-						}
-						skip <- attr(obj, "skips")
-						if (any(unlist(skip) > m)) return(FALSE)
-						index <- 1:length(skip)
-						indexjumps <- which(sapply(skip, identical, 1:m))
-                    			h <- attr(obj, "Steps")[index, 3]
-                    			if (length(indexjumps) > 0L) h[indexjumps] <- attr(obj, "Steps")[indexjumps, 2] - attr(obj, "Steps")[indexjumps, 1]
-			  			lowerend <- attr(obj, "Steps")[index, 1]					
-                    			x1 <- lowerend[1]
-						x2 <- x1 + h[1]
-						lowerend[1] <- x2
-						lowerend <- lowerend + h
-						if (lowerend[1] > attr(obj, "Steps")[1, 2]){
-							lowerend <- lowerend[-1]
-							index <- index[-1]
-							h <- h[-1]
-						}					
-						z <- c(x1, x2, unlist(mapply(seq, lowerend, attr(obj, "Steps")[index, 2], by = h)))
-						return(all(obj$x == z) & all(obj$y >= 0L))
-					}
-				}
-                	}
-		}
-	}
-     return(FALSE)
-
+    if (inherits(obj, "fpt.density") & is.list(obj) & (length(obj) == 
+        2)) 
+        if (all(unlist(lapply(obj, is.numeric))) & identical(names(obj), 
+            c("x", "y")) & identical(names(attributes(obj)), 
+            c("names", "Call", "Steps", "cumIntegral", "skips", 
+                "CPUTime", "summary.fptl", "class"))) 
+            if ((length(obj$x) == length(obj$y)) & is.call(attr(obj, 
+                "Call")) & is.summary.fptl(attr(obj, "summary.fptl")) & 
+                is.matrix(attr(obj, "Steps")) & is.numeric(attr(obj, 
+                "Steps")) & is.numeric(attr(obj, "cumIntegral")) & 
+                is.logical(attr(obj, "skips")) & is.matrix(attr(obj, 
+                "CPUTime")) & is.numeric(attr(obj, "CPUTime"))) 
+                if (all(diff(attr(obj, "cumIntegral")) >= 0) & 
+                  (length(attr(obj, "cumIntegral")) == length(attr(obj, 
+                    "skips"))) & (length(attr(obj, "cumIntegral")) == 
+                  nrow(attr(obj, "CPUTime"))) & (nrow(attr(obj, 
+                  "Steps")) >= nrow(attr(obj, "CPUTime"))) & 
+                  (ncol(attr(obj, "Steps")) == 4) & (ncol(attr(obj, 
+                  "CPUTime")) == 2)) {
+                  args <- as.list(attr(obj, "Call"))[-1]
+                  if (all(is.element(names(args), c("sfptl", 
+                    "variableStep", "from.t0", "to.T", "skip", 
+                    "n", "p", "tol")))) {
+                    if (is.element("variableStep", names(args))) 
+                      variableStep <- as.logical(as.character(args$variableStep))
+                    else variableStep <- TRUE
+                    if (is.element("from.t0", names(args))) 
+                      from.t0 <- as.logical(as.character(args$from.t0))
+                    else from.t0 <- FALSE
+                    if (is.element("to.T", names(args))) 
+                      to.T <- as.logical(as.character(args$to.T))
+                    else to.T <- FALSE
+                    if (is.element("skip", names(args))) 
+                      skip <- as.logical(as.character(args$skip))
+                    else skip <- TRUE
+                    if (is.element("n", names(args))) 
+                      n <- args$n
+                    else n <- 250
+                    if (is.element("p", names(args))) 
+                      p <- args$p
+                    else p <- 0.2
+                    if (is.element("tol", names(args))) 
+                      tol <- args$tol
+                    else tol <- 1e-05
+                    h <- attr(obj, "Steps")[, 3]
+                    h[attr(obj, "skips")] <- attr(obj, "Steps")[attr(obj, 
+                      "skips"), 2] - attr(obj, "Steps")[attr(obj, 
+                      "skips"), 1]
+                    h <- h[1:length(attr(obj, "cumIntegral"))]
+                    lowerend <- attr(obj, "Steps")[1:length(attr(obj, 
+                      "cumIntegral")), 1]
+                    x0 <- lowerend[1]
+                    lowerend[1] <- x0 + h[1]
+                    return(all(obj$y >= 0) & identical(attr(obj, 
+                      "Steps"), Integration.Steps(attr(obj, "summary.fptl"), 
+                      variableStep, from.t0, to.T, n, p)) & identical(obj$x, 
+                      c(x0, lowerend[1], unlist(mapply(seq, lowerend + 
+                        h, attr(obj, "Steps")[1:length(attr(obj, 
+                        "cumIntegral")), 2], by = h)))))
+                  }
+                }
+    return(FALSE)
 }
+
