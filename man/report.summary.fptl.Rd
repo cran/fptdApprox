@@ -7,12 +7,14 @@
   \dQuote{summary.fptl}.
 }
 \usage{
-\method{report}{summary.fptl}(obj, tex = FALSE, digits = 8, \dots)
+\method{report}{summary.fptl}(obj, tex = FALSE, digits = 8, heading = TRUE, \dots)
 }
 \arguments{
   \item{obj}{an object of class \dQuote{summary.fptl}, a result of a call to \code{\link{summary.fptl}}.}
   \item{tex}{logical, specifies whether to generate formatted LaTeX output (\code{TRUE}) or plain text file (\code{FALSE}).}
   \item{digits}{integer indicating the significant digits to be used.}
+  \item{heading}{logical, specifies whether to include information about the diffusion process and the boundary (\code{TRUE}) 
+  or not (\code{FALSE}).}
   \item{\dots}{additional arguments potentially passed (currently none is considered).}
 }
 \details{
