@@ -25,35 +25,42 @@ is.fptl(obj)
   \item{t0, T}{lower and upper limits of the considered time interval. Must be finite.}
   \item{x0}{initial value of process in the time instant specified in the \code{t0} argument.}
   \item{S}{character string with the mathematical expression of the boundary.}
-  \item{env}{a list object that contains the unspecified parameters in the \code{dp} object. 
-  It is copied into a temporary environment for evaluating the mathematical expressions in the \code{dp} object.}
+  \item{env}{a list object that contains the unspecified parameters in the \code{dp} object and \code{S}. 
+  It is copied into a temporary environment for evaluating the mathematical expressions in the \code{dp} object and \code{S}.}
   \item{n}{number of points spanning the considered time interval.}
   \item{\dots}{additional arguments potentially passed (currently none is considered).}
 }
 \details{
-The mathematical expression of the boundary \code{S} should be a function of \eqn{t}.
+The mathematical expression of the boundary \code{S} should be a function of \eqn{t} and may include arguments \code{t0},
+\code{x0} and the parameters specified in the \code{env} argument. The \code{FPTL} function checks if the mathematical expression 
+shows syntax errors and if \R can compute its symbolic derivative with respect to \eqn{t}.
 		
-The \code{env} argument is a list of tagged values in \code{parameter = value} form for the parameters in \code{dp} object
-other than \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}. Defaults to NULL, interpreted as an empty list. \R looks for the objects not found 
-into the temporary environment for evaluating \code{dp} object in the parent.frame()
+The \code{env} argument is a list of tagged values in \code{parameter = value} form for the unspecified parameters in the \code{dp} object
+and \code{S} other than \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}. Defaults to NULL, interpreted as an empty list. \R looks for the objects not found 
+into the temporary environment for evaluating \code{dp} object and \code{S} in the parent.frame()
 environment. \cr
 	
-The FPTL function for the problem of the first-passage-time of a diffusion process \eqn{X(t)} through a 
-boundary \eqn{S(t)} is defined as 
-\deqn{FPTL(t) = P[ X(t)>S(t) \thinspace | \thinspace X(t_0)=x_0] = 1 - F(S(t),t|x_0,t_0) \ , \ t_0 \leq t \leq T \ ,}{FPTL(t) = P[X(t)>S(t)|X(t0)=x0] = 1 - F(S(t),t|x0,t0) , t0 \le t \le T ,} 
+The FPTL function for the problem of the first-passage-time of a diffusion process \eqn{X(t)}, \eqn{t_0 \leq t \leq T}{t0 \le t \le T}, through a 
+boundary \eqn{S(t)} is defined as
+\ifelse{latex}{\deqn{FPTL(t) = \left\{
+\begin{array}{lll}
+P[ X(t)>S(t) \thinspace | \thinspace X(t_0)=x_0] = 1 - F(S(t),t|x_0,t_0) & & \mbox{if \ } x_0 < S(t_0) \vspace{5pt} \\
+P[ X(t)<S(t) \thinspace | \thinspace X(t_0)=x_0] = F(S(t),t|x_0,t_0) & & \mbox{if \ } x_0 > S(t_0)
+\end{array}
+ \right. \ , }}{\deqn{FPTL(t) = P[X(t)>S(t)|X(t0)=x0] = 1 - F(S(t),t|x0,t0) ,} 
 if \eqn{x_0 < S(t_0)}{x0 < S(t0)}, and
-\deqn{FPTL(t) = P[ X(t)<S(t) \thinspace | \thinspace X(t_0)=x_0] = F(S(t),t|x_0,t_0) \ , \ t_0 \leq t \leq T \ ,}{FPTL(t) = P[X(t)<S(t)|X(t0)=x0] = F(S(t),t|x0,t0) , t0 \le t \le T ,} 
-if \eqn{x_0 > S(t_0)}{x0 > S(t0)},
-being \eqn{F(x,t|y,s)}{F(x,t|y,s)} the transition probability distribution function of the process.
+\deqn{FPTL(t) = P[X(t)<S(t)|X(t0)=x0] = F(S(t),t|x0,t0) ,} 
+if \eqn{x_0 > S(t_0)}{x0 > S(t0)}, }
+where \eqn{F(x,t|y,s)}{F(x,t|y,s)} is the transition probability distribution function of the process.  \cr
 
-Initially, the FPTL function is evaluated at a sequence of n equally spaced values from \eqn{t_0}{t0} to \eqn{T}. 
+Initially, the FPTL function is evaluated at a sequence of n equally spaced values from \code{t0} to \code{T}. 
 Then the \code{FPTL} function makes an internal call to the \code{\link{growth.intervals}} function in order to study the growth
-of the evaluation vector. Finally, the FPTL function is evaluated at a more adequate sequence of values from \eqn{t_0}{t0} to \eqn{T} according 
+of the evaluation vector. Finally, the FPTL function is evaluated at a more adequate sequence of values from \code{t0} to \code{T} according 
 to the abovementioned study.
 }
 \value{
 The function \code{FPTL} computes and returns an object of class \dQuote{fptl}. It is a two-component list: 
-\item{x}{a sequence of n values from \eqn{t_0}{t0} to \eqn{T}.}
+\item{x}{a sequence of n values from \code{t0} to \code{T}.}
 \item{y}{the corresponding values of the FPTL function for the \code{x} sequence.} \cr
 It also includes two additional attributes: \cr \cr
 \code{dp} \eqn{\qquad \qquad \qquad}{ } the object used as \code{dp} argument in the function call. \cr

@@ -14,8 +14,8 @@
 }
 \usage{
 Approx.fpt.density(sfptl, variableStep = TRUE, from.t0 = FALSE, 
-                   to.T = FALSE, skip = TRUE, n = 250, p = 0.2,
-                   tol = 1e-05)		   
+                   to.T = FALSE, skip = TRUE, n = 250, p = 0.2, 
+                   alpha = 1, tol = 1e-03, it.max = 50000)                      
 		   
 is.fpt.density(obj)
 
@@ -36,10 +36,19 @@ avoided.}
   \item{n}{Number of points used to determine the integration step in subintervals where the f.p.t. density is not
 constant according to the FPTL function, that is, in \eqn{[t_i^*, t_{max,i}^+]}{[t[i]*, tmax[i]^+]} 
 from interesting instants provided by the FPTL function and contained in the \code{sfptl} object.}
-  \item{p}{Ratio of n used to determine the integration step in subintervals where the f.p.t. density function is 
-near constant according to the FPTL function, that is, in \eqn{[t_{max,i}^+, t_{i+1}^*]}{[tmax[i]^+, t[i+1]*]}
-from interesting instants provided by the FPTL function and contained in the \code{sfptl} object.}
+	\item{p}{Ratio of n used to determine the integration step in subintervals of \eqn{[t_0, \thinspace T]}{[t0, T]]} 
+where the f.p.t. density function is near constant according to the FPTL function, that is, in 
+\eqn{[t_{max,i}^+, t_{i+1}^*]}{[tmax[i]^+, t[i+1]*]}, \eqn{i=1, \ldots, m}{i=1,..., m}, \eqn{[t_0, t_1^*]}{[t0, t[1]*]} and 
+\eqn{[t_{max,m}^{+}, T]}{[tmax[m]^+, T]}.}
+  \item{alpha}{Parameter used to determine the integration step in subintervals of \eqn{[t_0, \thinspace T]}{[t0, T]]}
+where the f.p.t. density function is near constant according to the FPTL function, that is, in 
+\eqn{[t_{max,i}^+, t_{i+1}^*]}{[tmax[i]^+, t[i+1]*]}, \eqn{i=1, \ldots, m}{i=1,..., m}, \eqn{[t_0, t_1^*]}{[t0, t[1]*]} and 
+\eqn{[t_{max,m}^{+}, T]}{[tmax[m]^+, T]}, in order to reduce the computational cost of approximating the f.p.t. density function 
+in those cases where \eqn{t_{i+1}^* - t_{max,i}^+ >> t_{max,i}^{-} - \thinspace t_i^*}{t[i+1]* - tmax[i]^+ >> tmax[i]^- - t[i]*}, 
+for some \eqn{i}, \eqn{t_1^* - t_0 >> t_{max,1}^{-} - \thinspace t_1^*}{t[1]* - t0 >> tmax[1]^- - t0*} or 
+\eqn{T - t_{max,m}^+ >> t_{max,m}^{-} - \thinspace t_m^*}{T - tmax[m]^+ >> tmax[m]^- - t[m]*}, respectively.}  
   \item{tol}{If the cumulative integral of the approximation is greater than or equal to 1 - tol the algorithm is stopped.}
+  \item{it.max}{If the number of iterations required for the approximation process is greater than it.max, the function asks for permission to continue.}
   \item{\dots}{further arguments passed to \code{\link{print}} and \code{\link{format}} methods.}
 }
 \details{
@@ -63,11 +72,12 @@ provided by the FPTL function. It also uses a variable integration step. \cr
 
 The function makes an internal call to \code{\link{Integration.Steps}} function in order to determine the subintervals and 
 integration steps to be used in the application of the numerical algorithm according to the \code{variableStep}, 
-\code{from.t0}, \code{to.T}, \code{n} and \code{p} arguments. \cr
+\code{from.t0}, \code{to.T}, \code{n}, \code{p} and \code{alpha} arguments. \cr
 
 In addition, the function checks the cumulative value of the integral for each \eqn{t_{max,i}^+}{tmax[i]^+} 
-provided by the FPTL function and, if it is close to one, the numerical algorithm is stopped. In any case, 
-the algorithm is stopped in the final \eqn{t_{max,i}^+}{tmax[i]^+}. \cr
+provided by the FPTL function and, if it is greater than or equal to 1 - tol, the numerical algorithm is stopped. In any case, 
+the algorithm is stopped in the final \eqn{t_{max,i}^+}{tmax[i]^+}, and if the cumulative value of the integral is less than 1 - tol
+the function issues a warning. \cr
 
 Similarly, if \code{skip = TRUE}, the function checks the approximate density value for each \eqn{t_{max,i}^+}{tmax[i]^+}, 
 and, if it is near 0, the application of the numerical algorithm in the subinterval \eqn{[t_{max,i}^+, t_{i+1}^*]}{[tmax[i]^+, t[i+1]*]} 
@@ -97,7 +107,7 @@ It also includes six additional attributes:
 \code{x} is the vector result of the concatenation of the sequences of equally spaced values in the suitable subintervals 
 determined by the \code{\link{Integration.Steps}} function. Since its length is usually large, the \code{print.fpt.density} function 
 does not display an object of class \dQuote{fpt.density} as a list, but in its \sQuote{basic} structure instead. However, each component 
-can be displayed separately in the usual way. \cr
+can be displayed separately in the usual way. \cr \cr
 
 \code{is.fpt.density} returns \code{TRUE} or \code{FALSE} depending on whether its argument is an object of class \dQuote{fpt.density} or not. \cr
 }

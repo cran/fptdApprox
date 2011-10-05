@@ -4,34 +4,50 @@ function (x, from.t0, to.T, dp.legend = TRUE, dp.legend.cex = 1,
 {
     if (!is.fpt.density(x)) 
         stop(paste(sQuote("x"), "is not of class", shQuote("fpt.density")))
-    fromt0Call <- as.list(attr(x, "Call"))$from.t0
+
+    args <- as.list(attr(x, "Call"))
+    if (is.element("from.t0", names(args))) fromt0Call <- args$from.t0 else fromt0Call <- FALSE
+
     if (missing(from.t0)) 
         from.t0 <- fromt0Call
-    toTCall <- as.list(attr(x, "Call"))$to.T
+
+    if (is.element("to.T", names(args))) toTCall <- args$to.T else toTCall <- FALSE
+
     if (missing(to.T)) 
         to.T <- toTCall
+
     args <- as.list(attr(attr(x, "summary.fptl"), "FPTLCall"))
-    args <- c(args[3:6], unlist(args[[7]]))
+    if (is.element("env", names(args))){
+	if (is.call(args$env)) args <- c(args[3:6], unlist(as.list(args$env)[-1]))
+	else if (length(args$env) > 0) args <- c(args[3:6], unlist(args$env)) else args <- args[3:6]
+    }
+    else args <- args[3:6]
+    
     par(mar = c(3 + 2 * instants, 3 + ylab, 2, 1.5) + 0.1, ...)
-    if (dp.legend) {
+
+    if (dp.legend) {	          
+	  logic <- unlist(lapply(args, function(x) if (is.call(x)) return(TRUE) else if (is.numeric(x)) any(x < 0, format(x) != format(x, scientific=FALSE)) else return(FALSE))) 		
+	  if (any(logic)) args[logic] <- lapply(args[logic], function(x) as.call(parse(text=paste("(",deparse(x),")",sep="")))[[1]])		
+		
         dp.labels <- vector("expression", 3)
         dp.labels[[1]] <- substitute(paste("   Diffusion process:    ", 
             list(group("{", list(X(t), ~t ~ paste(" in  ", group("[", 
                 list(t0, T), "]"))), "}"), ~~~P(X(t0) == x0) == 
                 1)), args)
-        dp.labels[[2]] <- substitute(list(A[1](x, t) == paste(m, 
+	  dp.labels[[2]] <- substitute(paste(list(A[1](x, t) == m, 
             phantom(i)), ~~A[2](x, t) == v), list(m = eval(parse(text = paste("substitute(", 
-            attr(attr(x, "summary.fptl"), "dp")$mean, ", args)", 
-            sep = ""))), v = eval(parse(text = paste("substitute(", 
-            attr(attr(x, "summary.fptl"), "dp")$var, ", args)", 
-            sep = "")))))
+            gsub("*", "%.%", attr(attr(x, "summary.fptl"), "dp")$mean, fixed=TRUE), ", args)", sep = ""))), v = eval(parse(text = paste("substitute(", 
+            gsub("*", "%.%", attr(attr(x, "summary.fptl"), "dp")$var, fixed=TRUE), ", args)", sep = "")))))
         dp.labels[[3]] <- substitute("   Boundary:")
         dp.labels[[4]] <- substitute(S(t) == s, list(s = eval(parse(text = paste("substitute(", 
-            args[[4]], ", args)", sep = "")))))
-        dp.h <- strheight(dp.labels, units = "inch") * sqrt(par("cex") * 
+            gsub("*", "%.%", args$S, fixed=TRUE), ", args)", sep = "")))))
+	  dp.h <- strheight(dp.labels, units = "inch") * sqrt(par("cex") * 
             dp.legend.cex)/par("pin")[2]
     }
     else dp.h <- numeric(4)
+    
+    args <- lapply(args, eval)
+
     m <- max(dp.h[c(2, 4)])
     if (growth.points) 
         gp.h <- strheight(expression(t[1]), units = "inch") * 

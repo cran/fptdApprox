@@ -16,8 +16,8 @@ For a complete list of functions, use library(help=\dQuote{fptdApprox}).
 \tabular{ll}{
 Package: \tab fptdApprox\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-04-09\cr
+Version: \tab 1.1\cr
+Date: \tab 2011-04-15\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }
@@ -39,4 +39,3 @@ first-passage-time probability densities. \emph{Adv. Appl. Probab.}, \bold{19}, 
 Román, P., Serrano, J. J., Torres, F. (2008) First-passage-time location function: Application to determine
 first-passage-time densities in diffusion processes. \emph{Comput. Stat. Data Anal.}, \bold{52}, 4132--4146.
 }
-
