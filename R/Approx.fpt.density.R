@@ -212,4 +212,3 @@ function (sfptl, variableStep = TRUE, from.t0 = FALSE, to.T = FALSE,
     class(g) <- c("fpt.density", "list")    
     return(g)
 }
-

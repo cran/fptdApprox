@@ -95,4 +95,3 @@ function (sfptl, variableStep = TRUE, from.t0 = FALSE, to.T = FALSE,
     if (length(index)>0) L <- L[- index, ]    	
     return(L)
 }
-

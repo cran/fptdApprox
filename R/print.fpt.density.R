@@ -78,4 +78,3 @@ function (x, ...)
     cat("\nTotal user time              ", ut)
     cat("\n\n")
 }
-

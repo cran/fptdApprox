@@ -12,4 +12,3 @@ function (x, ...)
         x$tpdF)
     cat("\n\n")
 }
-

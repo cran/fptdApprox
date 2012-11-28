@@ -11,4 +11,3 @@ function (x, ...)
     print(attr(x, "Call"))
     cat("\n")
 }
-

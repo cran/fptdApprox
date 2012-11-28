@@ -82,7 +82,7 @@ function (dp, t0, T, x0, S, env = NULL, n = 10000)
                 1)[-1]
         else {
             v <- mapply(seq, endlimits[-length(endlimits)], endlimits[-1], 
-                length.out = m + 1, simplify = FALSE)
+                length.out = m + 1, SIMPLIFY = FALSE)
             if (is.list(v)) 
                 grid.t <- unlist(lapply(v, function(l) l[-1]))
             else grid.t <- as.vector(apply(v, 2, function(l) l[-1]))
@@ -123,4 +123,3 @@ function (dp, t0, T, x0, S, env = NULL, n = 10000)
     class(fptl) <- c("fptl", "list")
     return(fptl)
 }
-

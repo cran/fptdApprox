@@ -274,4 +274,3 @@ function (obj, report.sfptl = FALSE, tex = FALSE, digits = 8,
             "CPUTime")[, 1]), 2), " (in seconds).", sep = "")
     cat("\n\n")
 }
-

@@ -14,4 +14,3 @@ function (x, y, zeroSlope = 0.01)
         return(cbind(index.growth.from[l], index.growth.to[l]))
     else return()
 }
-
