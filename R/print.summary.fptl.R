@@ -28,4 +28,3 @@ function (x, ...)
     print(y, ...)
     cat("\n")
 }
-

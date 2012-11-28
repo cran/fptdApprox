@@ -83,4 +83,3 @@ function (object, zeroSlope = 0.01, p0.tol = 8, k = 3, ...)
         return(out)
     }
 }
-

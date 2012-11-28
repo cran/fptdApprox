@@ -28,7 +28,7 @@ gL <- expression(abs(log(A)-log(x0)+B*t0)*exp(-(log(A)-log(x0)+B*t-(m-sigma^2/2)
 # Case of a very concentrated f.p.t. variable                                                       #
 # Example 1 of the paper:                                                                           #
 #                                                                                                   #
-# P. Román, J.J. Serrano, F. Torres (2008)                                                          #
+# P. Rom\u00E1n, J.J. Serrano, F. Torres (2008)                                                     #
 # "First-passage-time location function: Application to determine first-pasage-times densities in   #
 # diffusion processes"                                                                              #
 # Computational Statistics and Data Analysis, 52, 4132-4146                                         #                                                                                              
@@ -42,7 +42,7 @@ plot(y1L.FPTL)
 
 # Displaying graphically the FPTL function  (with more adequate options)
 win.graph()
-plot(y1L.FPTL, cex=1.25, from.t0 = FALSE, to.T = FALSE)
+plot(y1L.FPTL, from.t0 = FALSE, to.T = FALSE)
  
 # Extracting the interesting information provided by the FPTL function
 y1L.SFPTL <- summary(y1L.FPTL)
@@ -54,7 +54,7 @@ report(y1L.g)
 
 # Displaying the approximation of the f.p.t. density
 win.graph()
-plot(y1L.g, cex=1.25)
+plot(y1L.g)
 
 # Superimposing the plot of the theoretical f.p.t. density
 points(y1L.g$x, eval(gL, list(t0=0,x0=1,m=4,sigma=0.001,A=2500,B=0,t=y1L.g$x)), type="l", col=2)
@@ -62,7 +62,7 @@ points(y1L.g$x, eval(gL, list(t0=0,x0=1,m=4,sigma=0.001,A=2500,B=0,t=y1L.g$x)), 
 # Displaying graphically the approximation of the f.p.t density together with the information provided by 
 # the FPTL function
 win.graph()
-plot(y1L.g, cex=1.25, growth.points=T, instants=T)
+plot(y1L.g, growth.points=T, instants=T)
 
 # Approximating the f.p.t density from t0 and variable integration step by using p and alpha arguments to reduce
 # significantly the computational cost. 
@@ -85,7 +85,7 @@ plot(y2L.g, from.t0=FALSE)
 y3L.FPTL <- FPTL(dp = Lognormal, t0 = 0, T = 25, x0 = 1, S = "0.5*exp(0.4*t)", list(m = 0.2, sigma = 0.25))
 # Displaying graphically the FPTL function
 win.graph()
-plot(y3L.FPTL, cex=1.25)
+plot(y3L.FPTL)
 
 # Extracting the interesting information provided by the FPTL function
 y3L.SFPTL <- summary(y3L.FPTL)
@@ -94,7 +94,7 @@ y3L.g <- Approx.fpt.density(y3L.SFPTL)
 y3L.g
 # Displaying graphically the approximation of the f.p.t. density
 win.graph()
-plot(y3L.g, cex=1.25)
+plot(y3L.g)
 
 # Superimposing the plot of the theoretical f.p.t. density
 points(y3L.g$x, eval(gL, list(t0=0,x0=1,m=0.2,sigma=0.25,A=0.5,B=0.4,t=y3L.g$x)), type="l", col=2)
@@ -110,7 +110,7 @@ points(y3L.g$x, eval(gL, list(t0=0,x0=1,m=0.2,sigma=0.25,A=0.5,B=0.4,t=y3L.g$x))
 y4L.FPTL <- FPTL(dp = Lognormal, t0 = 0, T = 10, x0 = 1, S = "7+3.2*t+1.4*t*sin(1.75*t)", list(m = 0.48, sigma = 0.07))
 # Displaying graphically the FPTL function
 win.graph()
-plot(y4L.FPTL, cex=1.25)
+plot(y4L.FPTL)
 
 # Extracting the interesting information provided by the FPTL function
 y4L.SFPTL <- summary(y4L.FPTL)
@@ -122,7 +122,7 @@ report(y4L.SFPTL, tex=TRUE)
 y4L.g <- Approx.fpt.density(y4L.SFPTL)
 # Displaying the approximation of the f.p.t. density
 win.graph()
-plot(y4L.g, cex=1.25)
+plot(y4L.g)
 
 # Reporting information of the approximation process of the f.p.t. density
 report(y4L.g)
@@ -140,7 +140,7 @@ report(y4L.g, tex=TRUE)
 y5L.FPTL <- FPTL(dp = Lognormal, t0 = 0, T = 18, x0 = 1, S = "4.5+4*t^2+7*t*sqrt(t)*sin(6*sqrt(t))", list(m = 0.48, sigma = 0.07))
 # Displaying graphically the FPTL function
 win.graph()
-plot(y5L.FPTL, cex=1.25)
+plot(y5L.FPTL)
 # Extracting the interesting information provided by the FPTL function
 y5L.SFPTL <- summary(y5L.FPTL)
 # Reporting the interesting information provided by the FPTL function
@@ -149,7 +149,7 @@ report(y5L.SFPTL)
 y5L.g <- Approx.fpt.density(y5L.SFPTL)
 # Displaying graphically the approximation of the f.p.t. density
 win.graph()
-plot(y5L.g, cex=1.25)
+plot(y5L.g)
 # Reporting information of the approximation process of the f.p.t. density
 report(y5L.g)
 
@@ -176,11 +176,11 @@ report(y5La.SFPTL)
 # the zeroSlope)
 # Note that in this case the FPTL exhibits 3 growth subintervals
 win.graph()
-plot(y5L.FPTL, y5La.SFPTL, cex=1.25)
+plot(y5L.FPTL, y5La.SFPTL)
 # Approximating the f.p.t density 
 y5Ld.g <- Approx.fpt.density(y5La.SFPTL)
 y5Ld.g
 
 # Displaying graphically the approximation of the f.p.t. density
 win.graph()
-plot(y5Ld.g, cex=1.25)
+plot(y5Ld.g)

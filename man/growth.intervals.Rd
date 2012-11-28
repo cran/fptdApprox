@@ -31,7 +31,7 @@ v <- sin(u)
 w <- growth.intervals(u, v)
 w
 
-plot(u, v, type="l")
+plot(u, v, type = "l", las = 1)
 abline(v = u[as.vector(w)])
 
 ## Continuing the FPTL(.) example:

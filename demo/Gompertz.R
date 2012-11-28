@@ -20,7 +20,7 @@ Gompertz
 # CONSTANT BOUNDARY  S                                                                         #
 # Application to real data of the paper:                                                       #
 #                                                                                              #
-# R. Gutiérrez, P. Román, D. Romero, J.J. Serrano, and F. Torres (2008)                        #
+# R. Guti\u00E9rrez, P. Rom\u00E1n, D. Romero, J.J. Serrano, and F. Torres (2008)              #
 # "Some time random variables related to a Gompertz-type diffusion process"                    #
 # Cybernetics and Systems: An International Journal, 39, 1-13                                  #
 ################################################################################################
@@ -46,7 +46,7 @@ report(y1G.g, report.sfptl=TRUE)
 # CONSTANT BOUNDARY  S = x0*exp((m/beta)*exp(-beta*t0) - 1)                                    #
 # Inflection time in Application to real data of the paper:                                    #
 #                                                                                              #
-# R. Gutiérrez, P. Román, D. Romero, J.J. Serrano, and F. Torres (2008)                        #
+# R. Guti\u00E9rrez, P. Rom\u00E1n, D. Romero, J.J. Serrano, and F. Torres (2008)              #
 # "Some time random variables related to a Gompertz-type diffusion process"                    #
 # Cybernetics and Systems: An International Journal, 39, 1-13                                  #
 ################################################################################################
@@ -73,7 +73,7 @@ report(y2G.g, report.sfptl=TRUE)
 # Time at which the process achieves a percentage 100*p% of the total growth in                # 
 # Application to real data of the paper:                                                       #
 #                                                                                              #
-# R. Gutiérrez, P. Román, D. Romero, J.J. Serrano, and F. Torres (2008)                        #
+# R. Guti\u00E9rrez, P. Rom\u00E1n, D. Romero, J.J. Serrano, and F. Torres (2008)              #
 # "Some time random variables related to a Gompertz-type diffusion process"                    #
 # Cybernetics and Systems: An International Journal, 39, 1-13                                  #
 ################################################################################################

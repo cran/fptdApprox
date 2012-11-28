@@ -157,4 +157,3 @@ function (obj, tex = FALSE, digits = 8, heading = TRUE, ...)
         ".", sep = "")
     cat("\n\n")
 }
-
