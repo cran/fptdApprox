@@ -1,24 +1,17 @@
 is.summary.fptl <-
 function (obj) 
 {
-    if (inherits(obj, "summary.fptl") & is.matrix(obj) & is.numeric(obj) & 
-        identical(names(attributes(obj)), c("dim", "Call", "FPTLValues", "FPTLCall", "dp", "class"))) 
-        if ((ncol(obj) == 5) & is.call(attr(obj, "Call")) &  
-            is.matrix(attr(obj, "FPTLValues")) & is.numeric(attr(obj, 
-            "FPTLValues")) & is.call(attr(obj, "FPTLCall")) & 
-            is.diffproc(attr(obj, "dp"))){
-			args <- as.list(attr(obj, "Call"))[-1]
-			if (is.element("zeroSlope", names(args))) zeroSlope <- eval(args$zeroSlope) else zeroSlope <- 0.01
-			if (is.element("p0.tol", names(args))) p0.tol <- eval(args$p0.tol) else p0.tol <- 8
-			if (is.element("k", names(args))) k <- eval(args$k) else k <- 3
-			if (is.numeric(zeroSlope) & is.numeric(p0.tol) & is.numeric(k))
-            		if ((zeroSlope <= 0.01) & (p0.tol >= 8) & (k >= 1.5) & all(diff(c(t(obj))) >= 0)) {
-                			args <- as.list(attr(obj, "FPTLCall"))[-1]
-                			if (all(is.element(c("dp", "t0", "T", "x0", "S"), 
-                  		names(args)))) 
-                  		return(all(obj >= eval(args$t0)) & all(obj <= eval(args$T)))
-				}
-            }
-	
-    return(FALSE)
+    if (inherits(obj, "summary.fptl") & is.list(obj) & all(is.element(names(attributes(obj)), c("Call", "FPTLCall", "dp", "vars", "id", "class")))){
+		if (all(sapply(obj, is.list)) & all(sapply(obj, length) == 2L) & all(sapply(lapply(obj, names), identical, c("instants", "FPTLValues"))) & 
+		is.list(attr(obj, "Call")) & is.list(attr(obj, "FPTLCall")) & is.diffproc(attr(obj, "dp")) & (is.list(attr(obj, "vars")) | is.null(attr(obj, "vars"))) & 
+		(((length(obj) == 1) & is.null(attr(obj, "id"))) | ((length(obj) > 1L) & is.list(attr(obj, "id")) & (length(attr(obj, "id")) == 4L)))){
+			if (all(sapply(obj, function(x) is.numeric(x$instants) & is.matrix(x$instants) & (ncol(x$instants) == 5L))) & 
+			all(sapply(obj, function(x) is.numeric(x$FPTLValues) & is.matrix(x$FPTLValues) & (ncol(x$FPTLValues) == 5L))) & 
+			all(sapply(obj, function(x) nrow(x$instants) == nrow(x$FPTLValues))) & all(sapply(attr(obj, "Call"), is.call)) &
+			all(sapply(attr(obj, "FPTLCall"), is.call))){
+				if ((length(unique(lapply(attr(obj, "FPTLCall"), function(x) as.list(x)[-5]))) == 1L)) return(TRUE)		
+			}
+		}
+	}
+	return(FALSE)
 }

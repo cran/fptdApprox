@@ -2,275 +2,278 @@ report.fpt.density <-
 function (obj, report.sfptl = FALSE, tex = FALSE, digits = 8, 
     ...) 
 {
-    if (!is.fpt.density(obj)) 
-        stop(paste(sQuote("obj"), "is not of class", shQuote("fpt.density")))    
+	if (!is.fpt.density(obj)) 
+        stop(paste(sQuote("obj"), "is not of class", shQuote("fpt.density"))) 
 
-    args <- as.list(attr(obj, "Call"))
+	cp <- is.null(obj$y.x0)
+    	A <- attr(obj, "Call")
+	f <- A[[1]]
+	Args <- formals(eval(f))
+	logic <- (as.character(f) == "Approx.fpt.density")
+    	Args[names(A)[-1]] <- A[-1]
 
-    if (is.element("variableStep", names(args))) 
-        variableStep <- as.logical(as.character(args$variableStep))
-    else variableStep <- TRUE
+	ArgsFPTL <- formals(FPTL)
+	A <- attr(attr(obj, "summary.fptl"), "FPTLCall")[[1]][-1]
+	ArgsFPTL[names(A)] <- A
+	if (!cp) ArgsFPTL$x0 <- sapply(attr(attr(obj, "summary.fptl"), "FPTLCall"), "[[", "x0")
+		
+	dp <- attr(attr(obj, "summary.fptl"), "dp")
+	S <- ArgsFPTL$S
+	env <- ArgsFPTL$env
+	if (is.name(env)) env <- attr(attr(obj, "summary.fptl"), "vars")[[as.character(env)]] else env <- as.list(env)[-1]
 
-    if (is.element("from.t0", names(args))) 
-        from.t0 <- as.logical(as.character(args$from.t0))
-    else from.t0 <- FALSE
-
-    if (is.element("to.T", names(args))) 
-        to.T <- as.logical(as.character(args$to.T))
-    else to.T <- FALSE
-
-    if (is.element("skip", names(args))) 
-        skip <- as.logical(as.character(args$skip))
-    else skip <- TRUE
-
-    if (is.element("n", names(args))) 
-        n <- eval(args$n)
-    else n <- 250 
-   
-    if (is.element("tol", names(args))) 
-        tol <- eval(args$tol)
-    else tol <- 1e-03
-
-    argsFPTL <- as.list(attr(attr(obj, "summary.fptl"), "FPTLCall"))
-    if (is.element("env", names(argsFPTL))){
-	if (is.call(argsFPTL$env)) argsFPTL <- c(argsFPTL[3:6], unlist(as.list(argsFPTL$env)[-1]))
-	else if (length(argsFPTL$env) > 0) argsFPTL <- c(argsFPTL[3:6], unlist(argsFPTL$env)) else argsFPTL <- argsFPTL[3:6]
-    }
-    else argsFPTL <- argsFPTL[3:6]   
-    
-    m1 <- nrow(attr(obj, "summary.fptl"))
-    m2 <- nrow(attr(obj, "Steps"))
-
-    logic <- c(from.t0 & (eval(argsFPTL$t0) < attr(obj, "summary.fptl")[1, 
-        1]), to.T & (attr(obj, "summary.fptl")[m1, 5] < eval(argsFPTL$T)))
-
-    if (tex) {	  	  
-      dollar <- "$"
-      noindent <- "\\noindent "
-      vskip <- "\\vskip 10pt "	  
-      ldots <- "\\ldots"
-      labelStep <- c("$h_{", "}")        
-      t0.label <- "$t_{0}$"	  
-        
-	Call <- match.call()		
-	Call[[1]] <- as.name("report")
-	cat("\n\\vskip 20pt \\noindent \\verb$", deparse(Call), "$", sep="")
-	if (is.name(match.call()$obj)){
-			cat("\n\n", vskip, noindent, "The fpt.density class object {\\it ", match.call()$obj, "} ", sep="")
+	if (!is.null(env)){
+		if (cp) env <- c(t0 = ArgsFPTL$t0, x0 = ArgsFPTL$x0, env) else env <- c(t0 = ArgsFPTL$t0, env)
+		A1 <- parse(text = dp$mean)[[1]]
+		A2 <- parse(text = dp$var)[[1]]
+		if (is.character(S)) S <- parse(text = S)[[1]]								
+		l1 <- (sapply(env, length) == 1L)
+		if (any(l1)){
+			env1 <- env[l1]
+			logic <- sapply(env1, is.character)
+			if (any(logic)){
+				env2 <- lapply(env1[logic], function(x) eval(parse(text = paste("substitute(", x, ")", sep = ""))))
+				A1 <- eval(substitute(substitute(expr, env2), list(expr = A1)))
+	      		A2 <- eval(substitute(substitute(expr, env2), list(expr = A2)))
+				if (!is.numeric(S)) S <- eval(substitute(substitute(expr, env2), list(expr = S)))
+			}
+			logic <- sapply(env1, is.numeric)
+			if (any(logic)){
+				env2 <- env1[logic]
+				A1 <- eval(substitute(substitute(expr, env2), list(expr = A1)))
+	      		A2 <- eval(substitute(substitute(expr, env2), list(expr = A2)))
+				if (!is.numeric(S)) S <- eval(substitute(substitute(expr, env2), list(expr = S)))
+			}
+		}
+		l2 <- !l1
+		if (!is.null(attr(attr(obj, "summary.fptl"), "vars")) | any(l2)){
+			env2 <- c(attr(attr(obj, "summary.fptl"), "vars"), env[l2])
+			v <- intersect(union(all.names(A1), all.names(A2)), names(env2))
+			if (length(v) > 0L){
+				w <- lapply(env2[v], function(x) paste("(", paste(x, collapse = ", "), "),", sep = "")) 
+				w[[length(w)-1L]] <- substring(w[[length(w)-1L]], 1L, nchar(w[[length(w)-1L]])-1L)			
+			}			
+		}
+		else v <- character(0)
+		
+		A1 <- as.character(parse(text = deparse(A1)))
+		A2 <- as.character(parse(text = deparse(A2)))
+		if (!is.numeric(S)) S <- as.character(parse(text = deparse(S)))
 	}
-	else cat("\n\n", vskip, noindent, "This fpt.density class object ", sep="")
-	cat("stores an approximation of the first-passage-time density through the boundary")
-	cat("\n$S(t) = ", argsFPTL$S, "$ for the diffusion process $\\{X(t) \\thinspace ; \\thinspace t_0 \\leq t \\leq T \\}$", sep="")		
-	cat("\nwith infinitesimal moments $A_1(x,t) = ", attr(attr(obj, "summary.fptl"), "dp")$mean, "$ and $A_2(x,t) = ", attr(attr(obj, "summary.fptl"), "dp")$var, "$, in the particular case", sep="")
-	cat("\n", paste(c("$t_0$","$T$","$x_0$",paste("$", names(argsFPTL[-(1:4)]), "$", sep="")), lapply(argsFPTL[-4], deparse), sep= " = ", collapse = ", "), " and $P(X(", deparse(argsFPTL$t0), ") = ", deparse(argsFPTL$x0), ") = 1$.", sep="")	
-	cat("\n\n", vskip, noindent, "It was created with the R expression", sep="")	  
-	cat("\n\\begin{verbatim}\n")	
-	cat(deparse(attr(obj, "Call")), fill = 80)	
-	cat("\\end{verbatim}")
-	cat("\n\n", vskip, noindent, "The approximation process makes use of the First-Passage-Time Location (FPTL) function to locate the first-passage-time variable.\n", sep="")	
-    }
-    else {
-      dollar <- ""
-      noindent <- ""
-      vskip <- "\n"
-      ldots <- "..."
-      labelStep <- c("h[", "]")
-      t0.label <- "t0"
-
-	if (is.name(match.call()$obj)){
-		cat("\nThe fpt.density class object ", shQuote(match.call()$obj), sep="")
+	else{
+		A1 <- as.character(parse(text = dp$mean))
+		A2 <- as.character(parse(text = dp$var))		
+		if (!is.numeric(S)){
+			if (cp) env2 <- list(t0 = ArgsFPTL$t0, x0 = ArgsFPTL$x0) else env2 <- list(t0 = ArgsFPTL$t0)	
+			S <- as.character(parse(text = deparse(eval(substitute(substitute(expr, env2), list(expr = parse(text = S)[[1]]))))))
+		}
+		v <- character(0)
 	}
-	else cat("\nThis fpt.density class object", sep="")
-	cat(" stores an approximation of the first-passage-time density through the")		
-	cat("\nboundary S(t) = ", argsFPTL$S, " for the diffusion process {X(t); t0 <= t <= T} with", sep="")
-	cat("\ninfinitesimal moments A1(x,t) = ", attr(attr(obj, "summary.fptl"), "dp")$mean, " and A2(x,t) = ", attr(attr(obj, "summary.fptl"), "dp")$var, ", in the particular case", sep="")
-	cat("\n", paste(names(argsFPTL[-4]), argsFPTL[-4], sep= " = ", collapse = ", "), " and P(X(", deparse(argsFPTL$t0), ") = ", deparse(argsFPTL$x0), ") = 1.", sep="")	  
-	cat("\n\nIt was created with the R expression", sep="")
-	cat("\n\n\t", deparse(attr(obj, "Call")))
-	cat("\n\nThe approximation process makes use of the First-Passage-Time Location (FPTL) function to locate the first-passage-time variable.")
-    }    
-
-    if (report.sfptl) report(attr(obj, "summary.fptl"), tex, digits, title="", head=FALSE)
-    
-    if (from.t0) 
-        t0.label <- paste(" starting from ", t0.label, " = ", eval(argsFPTL$t0), sep = "")
-    else t0.label <- ""
-
-    if (to.T) 
-        T.label <- paste(rep(" and ", from.t0), "until ", dollar, 
-            "T", dollar, " = ", eval(argsFPTL$T), sep = "")
-    else T.label <- ""
 	
-    h <- format((attr(obj, "summary.fptl")[, 3] - attr(obj, 
-        "summary.fptl")[, 2])/n, digits=digits)
-    intervals <- matrix(format(attr(obj, "summary.fptl")[, c(2,5)], digits=digits),ncol=2)
-    intervals <- paste("[", intervals[, 1], ", ", intervals[, 2], "]", sep = "")
-    
-    cat("\n", vskip, noindent, "From the information provided by the FPTL function and stored in the ", sep="")
-    if (is.name(args$sfptl)) cat("summary.fptl class object ", switch(1 + tex, shQuote(args$sfptl), paste("{\\it ", args$sfptl, "}", sep="")), ",", sep="")
-    else cat("appropriate summary.fptl class object,")
+	if (tex) { 
+		noindent <- "\\noindent "
+        	vskip <- "\n\\vskip 10pt "
+        	dollar <- "$"
+		sim <- " \\sim "
+        	x0.label <- "x_{0}"
+        	ti.label <- "t_{i}^{\\phantom{*}}"
+        	labels <- c("$I_{i}^{\\phantom{+}}$", "$t_{i}^{*}$", "$t_{max,i}^{-}$", "$t_{max,i}^{\\phantom{+}}$", "$t_{max,i}^{+}$")
+		alpha <- "$\\alpha$"
+		Q <- "$q_{\\alpha}$"
+		IQ <- "[$q_{\\mbox{\\tiny $10^{-4}$}}$, $q_{\\mbox{\\tiny $1-10^{-4}$}}$]"      	
+    	}
+    	else {
+        	noindent <- ""
+        	vskip <- "\n"
+        	dollar <- ""
+		sim <- " ~ "
+        	x0.label <- "x0"
+        	ti.label <- "t[i]"
+        	labels <- c("I[i]", "t[i]*", "tmax[i]^-", "tmax[i]", "tmax[i]^+")
+		alpha <- "alpha"
+		Q <- "q[alpha]"
+		IQ <- "[q[10^(-4)], q[1-10^(-4)]]"		  	
+	}
+	
+	aux <- function(paragraph, m){
+			N <- nchar(paragraph)
+			if (m < N){
+				index <- unlist(gregexpr(" ", paragraph))
+				J <- numeric(0)
+				i <- m
+				while(i < N){
+					i <- index[tail(which(index <= i),1)]
+					J <- c(J, i)
+					i <- m + i
+				}
+				return(substring(paragraph, c(1, J+1L), c(J, N)))
+			}
+			else return(paragraph)
+		}
 
-    if (m1 > 1) {        
-	  cat("\nwe must use the following integration steps in order to approximate the first-passage-time density:\n")         
-        if (tex) {
-		cat("\\begin{center}\n")
-            cat("\\setlength{\\tabcolsep}{5pt} \n\\begin{tabular}{rcl}\n")
-            cat(paste("$h_{", 1:m1, "}$ = ", h, " & in subinterval & $", 
-                intervals, "$ \\\\", sep = ""), sep = "\n")
-            cat("\\end{tabular}\n")
-		cat("\\end{center}\n")
-        }
-        else cat(paste("\th[", format(1:m1), "] = ", h, "  in subinterval  ", 
-            intervals, sep = ""), sep = "\n")
-        cat("\n", vskip, noindent, "With the aim of determining these integration steps, we have subdivided the appropriate subintervals into ", 
-            n, " parts.", sep = "")
-    }
-    else {        
-	  cat("\nwe must use the integration step ", labelStep[1], "1", labelStep[2], dollar, " = ", h[1], 
-            " in subinterval ", dollar, intervals[1], dollar, " in order to", sep = "")
-        cat("\napproximate the first-passage-time density. With the aim of determining this integration step, we have divided the")
-        cat("\nappropriate subinterval into ", n, " parts.", 
-            sep = "")
-    }
-    if (m1 > 1) 
-        pl <- "s"
-    else pl <- ""
-    index.h <- c(rep(0, logic[1]), rep(1:round(m2/2), each = 2, 
-        length.out = m2 - sum(logic)), rep(m1 + 1, logic[2]))
-    h.labels <- paste(labelStep[1], index.h, labelStep[2], sep = "")
-    lg <- as.logical(attr(obj, "Steps")[, 4])
-    if (any(lg)) {
-        h.labels[lg] <- paste(h.labels[lg], "^*", sep = "")
-        h.labels[!lg] <- paste(h.labels[!lg], "  ", sep = "")
-    }
-    h.labels <- paste(h.labels, dollar, " = ", format(attr(obj, 
-        "Steps")[, 3], digits=digits), sep = "")
-    intervals <- matrix(format(attr(obj, "Steps")[, 1:2], digits=digits),ncol=2)
-    tstop <- paste(dollar, "t", dollar, " = ", intervals[length(attr(obj, "cumIntegral")),2], sep = "")
-    intervals <- paste("[", intervals[, 1], ", ", intervals[, 2], "]", sep = "")
-    cat("\n\n", vskip, noindent, "The f.p.t. density has been approximated ", 
-        t0.label, T.label, " using a ", switch(1 + variableStep, 
-            "fixed", "variable"), " integration step", sep = "")
-    if (skip) 
-        cat(" and avoiding the application \nof the numerical algorithm in those subintervals in which this is possible.")
-    else cat(".")
-    if (variableStep) {
-        if (m2 > 1) {
-            cat("\n\n", vskip, noindent, "For this specific application of the algorithm, we consider the following subintervals and integration steps:\n", 
-                sep = "")
-            if (tex) {
-                cat("\\begin{center}\n")
-	          cat("\\setlength{\\tabcolsep}{5pt} \n\\begin{tabular}{rcl}\n")
-                cat(paste(h.labels, " & in subinterval & $", 
-                  intervals, "$ \\\\", sep = ""), sep = "\n")
-                cat("\\end{tabular}\n")
-		    cat("\\end{center}\n")
-            }
-            else cat(paste("\t", h.labels, "  in subinterval  ", 
-                intervals, sep = ""), sep = "\n")
-            cat("\n", vskip, noindent, "The endlimits of the subintervals have been readjusted according to the integration steps.", 
-                sep = "")
-        }
-        else {
-            cat("\n\n", vskip, noindent, "For this specific application of the algorithm, we consider the integration step ", 
-                h.labels, " in subinterval ", 
-                dollar, intervals, dollar, ".", sep = "")
-            cat("\nThe endlimits of the subinterval have been readjusted according to the integration step.", 
-                sep = "")
-        }        
-    }
-    else {
-        cat("\n", vskip, noindent, "For this specific application of the algorithm, we consider the fixed integration step ", 
-            sep = "")
-        if (m1 > 1) 
-            cat("given by the minimum of the integration steps ")
-        cat("\nprovided by the FPTL function, that is, ", dollar, 
-            "h = ", format(attr(obj, "Steps")[1, 3], digits=digits), 
-            dollar, sep = "")
-        if (m2 > 1) {
-            cat(", over the following subintervals:", sep = "")
-            if (tex) {
-                cat(" \\smallskip \n\n\\centerline{\n\\begin{tabular}{l}\n")
-                cat(paste("$", intervals, "$ \\\\", sep = ""), 
-                  sep = "\n")
-                cat("\\end{tabular}}\n")
-            }
-            else cat("\t", intervals, sep = "\n\t")
-            cat("\n", vskip, noindent, "The endlimits of the subintervals have been readjusted according to the fixed integration step.", 
-                sep = "")
-        }
-        else {
-            cat(", in subinterval ", dollar, intervals, dollar, 
-                ".", sep = "")
-            cat("\nThe endlimits of the subinterval have been readjusted according to the fixed integration step.")
-        }
-    }
-    x <- data.frame(matrix(, nrow = length(attr(obj, "cumIntegral")), ncol = 7 - 
-        tex))	    
-    x[, 3 - tex] <- attr(obj, "Steps")[1:length(attr(obj, "cumIntegral")), 3]    
-    x[, 4 - tex] <- attr(obj, "cumIntegral")
-    x[, 5 - tex] <- (attr(obj, "Steps")[1:length(attr(obj, "cumIntegral")), 
-        2] - attr(obj, "Steps")[1:length(attr(obj, "cumIntegral")), 
-        1])/attr(obj, "Steps")[1:length(attr(obj, "cumIntegral")), 
-        3]    
-    x[, 6:7 - tex] <- attr(obj, "CPUTime")
-    x[attr(obj, "skips"), 5 - tex] <- 0
-    it <- sum(x[, 5 - tex])
+	pardp <- "stores an approximation of the first-passage-time density through the boundary"
+	if (is.name(match.call()$obj)) pardp <- paste("The fpt.density class object", ifelse(tex, paste("{\\tt ", match.call()$obj, "}", sep=""), 
+									shQuote(match.call()$obj)), pardp)
+	else pardp <- pardp <- paste("This fpt.density class object", pardp)		
+	cat(aux(pardp, 125L), sep="\n")
+	if (tex){
+		S <- paste("\\verb#", aux(S, 60L), "#", sep = "")
+		if (length(S) > 1L){
+			cat("$$\\arraycolsep 2pt \\begin{array}{ll}")
+			cat(paste(c("\n\\mbox{\\tt S(t)} =", character(length(S)-1)), S, sep = " & "), sep = " \\\\ \n")
+			cat("\\end{array}$$")
+		}
+		else cat("$$\\mbox{\\tt S(t)} = ", S, "$$", sep = "")
+		cat(aux(paste("\nof the diffusion process $\\{X(t) \\thinspace ; \\thinspace ", ArgsFPTL$t0, " \\leq t \\leq ", ArgsFPTL$T, 
+				" \\}$ with infinitesimal moments \\medskip", sep = ""), 125L), sep = "\n")
+		A1 <- paste("\\verb#", aux(A1, 60L), "#", sep = "")
+		if (length(A1) > 1L){
+				cat("\n\\qquad $\\arraycolsep 2pt \\begin{array}{ll}")
+				cat(paste(c("\n\\mbox{\\tt A}_1\\mbox{\\tt (x,t)} =", character(length(A1)-1)), A1, sep = " & "), sep = " \\\\ \n")
+				cat("\\end{array}$ \\medskip")
+		}
+		else cat("\n\\qquad $\\mbox{\\tt A}_1\\mbox{\\tt (x,t)} = ", A1, "$ \\medskip", sep = "")
+		cat("\n\n\\noindent and \\medskip \n")
+		A2 <- paste("\\verb#", aux(A2, 60L), "#", sep = "")
+		if (length(A2) > 1L){
+				cat("\n\\qquad $\\arraycolsep 2pt \\begin{array}{ll}")
+				cat(paste(c("\n\\mbox{\\tt A}_2\\mbox{\\tt (x,t)} = ", character(length(A2)-1)), A2, sep = " & "), sep = " \\\\ \n")
+				cat("\\end{array}$ \\medskip")
+		}
+		else cat("\n\\qquad $\\mbox{\\tt A}_2\\mbox{\\tt (x,t)} = ", A2, "$ \\medskip", sep = "")
+		cat("\n")
+		if (length(v) > 0L){
+			cat("\n\\noindent where \\medskip \n")
+			v <- paste(v, "=")
+			w <- lapply(w, aux, m = 60L)
+			logic <- (sapply(w, length) > 1L)
+			w[logic] <- mapply(function(x, y) c("\n\\qquad {\\tt \\tabcolsep 2pt \\begin{tabular}{ll}", paste(c(x, character(length(y)-1L)), 
+						" & ", y, "\\\\", sep = ""), "\\end{tabular}} \\medskip"), v[logic], w[logic], SIMPLIFY = FALSE)
+			w[!logic] <- mapply(function(x, y) paste("\n\\qquad {\\tt ", x, y, "} \\medskip", sep = ""), v[!logic], w[!logic], SIMPLIFY = FALSE)
+			lapply(w[-length(w)], cat, sep = "\n")
+			cat("\n\\noindent and\n")
+			cat(w[[length(w)]], sep = "\n")	
+		}
+		cat("\n")
+	}
+	else{
+		n <- nchar("S(t) = ")
+		S <- aux(S, 125L - 8L - n) 
+		S <- paste("\t", c("S(t) = ", rep(paste(rep(" ", n), collapse = ""), length(S)-1L)), S, sep = "")
+		cat(S, sep = "\n")
+		cat(aux(paste("of the diffusion process {X(t); ", ArgsFPTL$t0, " <= t <= ", ArgsFPTL$T, "} with infinitesimal moments", sep = ""), 125L), sep = "\n")
+		n <- nchar("A1(x,t) = ")
+		A1 <- aux(A1, 125L - 8L - n) 
+		A1 <- paste("\t", c("A1(x,t) = ", rep(paste(rep(" ", n), collapse = ""), length(A1)-1L)), A1, sep = "")
+		cat(A1, sep = "\n")
+		cat("and\n")
+		n <- nchar("A2(x,t) = ")
+		A2 <- aux(A2, 125L - 8L - n) 
+		A2 <- paste("\t", c("A2(x,t) = ", rep(paste(rep(" ", n), collapse = ""), length(A2)-1L)), A2, sep = "")
+		A2[length(A2)] <- paste(A2[length(A2)], ",", sep = "")
+		cat(A2, sep = "\n")
+		if (length(v) > 0L){
+			cat("where\n")
+			v <- paste(v, "= ")
+			w <- lapply(w, aux, m = 125L - 8L - max(nchar(v)))
+			w <- mapply(function(x,y) paste("\t", c(x, rep(paste(rep(" ", nchar(x)+1L), collapse = ""), length(y)-1L)), y, sep = ""), v, w)
+			lapply(w[-length(w)], cat, sep = "\n")
+			cat("and\n")
+			cat(w[[length(w)]], sep = "\n")	
+		}		
+	}
+		
+	if (cp) cat(aux(paste(noindent, "conditioned to ", dollar, "X(", ArgsFPTL$t0, ") = ", ArgsFPTL$x0, dollar, ".", sep = ""), 125L), sep = "\n")
+	else{
+		cat(aux(paste(noindent, "and initial distribution ", dollar, "X(", ArgsFPTL$t0, ")", sim, ifelse(tex, attr(attr(obj, "summary.fptl"), "id")[[3]], 
+			attr(attr(obj, "summary.fptl"), "id")[[4]]), dollar, ".", sep = ""), 125L), sep = "\n")
+		
+		cat(aux(paste(vskip, noindent, "The first-passage-time density function has been obtained by numerical integration, in the range of variation of ", 
+			dollar, "X(", ArgsFPTL$t0, ")", dollar, ", of the corresponding first-passage-time densities conditioned to values of ", dollar, 
+			"X(", ArgsFPTL$t0, ")", dollar, ", weighted by the initial density function. Concretely, ", Args$m, " equally spaced values of ", 
+			dollar, "X(", ArgsFPTL$t0, ")", dollar, " in ", IQ, " has been considered, where ", Q, " is the ", alpha, "-quantile for the distribution of ", 
+			dollar, "X(", ArgsFPTL$t0, ")", dollar, ".", sep = ""), 125L), sep = "\n")
+	}
+
+	cat(aux(paste(vskip, noindent, "The approximation process makes use of the First-Passage-Time Location (FPTL) function to locate the first-passage-time variable.", 
+		sep = ""), 125L), sep = "\n")
+
+    	if (report.sfptl) report(attr(obj, "summary.fptl"), tex, digits, title="", heading=FALSE)
+
+	to.T <- Args$to.T
+
+	m <- length(ArgsFPTL$x0)
+	if (Args$skip) jumps <- which(sapply(attr(obj, "skips"), identical, 1:m)) else jump <- integer(0)
+	
+	nI <- length(attr(obj, "cumIntegral"))
+    	index <- 1:nI
+    	y <- data.frame(matrix(, nrow = nI, ncol = 5))
+    	names(y) <- c("Subinterval", "Integration step", "Cumulative integral", "Iterations", "User time")
     
-    if (tex) {
-	  x <- format(x, digits=digits)
-        x[attr(obj, "skips"), 3 - tex] <- ""
-        x[, 1] <- paste("$", intervals[1:length(attr(obj, "cumIntegral"))], 
-            "$", sep = "")
-        cat("\n\n\\begin{table}[h]", sep = "")
-        cat("\n\\centering")
-        cat("\n\\caption{Approximation summary step by step} \\medskip")
-        cat("\n\\label{SummaryApproxfpt}")
-        cat("\n\\setlength{\\tabcolsep}{5pt} \n\\begin{tabular}{|r|r|c|r|r|r|}")
-        cat("\n\\hline \\multicolumn{1}{|c|}{} &", paste("\\multicolumn{1}{c|}{", 
-            c("Integration", "Cumulative", " ", "User", "System"), 
-            "}", sep = "", collapse = " & "), "\\\\ \n")
-        cat("\\multicolumn{1}{|c|}{Subintervals} &", paste("\\multicolumn{1}{c|}{", 
-            c("step", "integral", "Iterations", "time", "time"), 
-            "}", sep = "", collapse = " & "), "\\\\ ")
-        cat("\n\\hline ")
-        cat(apply(x, 1, paste, collapse = " & "), sep = " \\\\ \n")
-        cat("\\\\ \\hline ")
-        cat("\n\\end{tabular}")
-        cat("\n\\end{table}")
-        cat("\n\n", vskip, noindent, "Table \\ref{SummaryApproxfpt} shows the approximation process step by step.", 
-            sep = "")
-    }
-    else {
-        x[, 1:2] <- format(attr(obj, "Steps")[1:length(attr(obj, 
-            "cumIntegral")), 1:2], digits=digits)
-	  x <- format(x, digits=digits)
-        x[attr(obj, "skips"), 3 - tex] <- ""
-	  row.names(x) <- paste("Subinterval", 1:length(attr(obj, 
-                "cumIntegral")))	        
-        names(x) <- c("Lower end", "Upper end", "Integration step", 
-            "Cumulative integral", "Iterations", "User time", 
-            "System time")
-        cat("\n\nThe table below shows the approximation process step by step: \n\n")
-        print(x)
-    }
-    cumIntegral <- format(attr(obj, "cumIntegral")[length(attr(obj, 
-        "cumIntegral"))], digits=digits)
-    if (to.T) {
-        cat("\nThe value of the cumulative integral of the approximation is ", 
-            cumIntegral, ".", sep = "")
-    }
-    else {        
-        if ((cumIntegral > (1 - tol)) & (length(attr(obj, "cumIntegral")) < 
-            m2)) 
-            cat("\nThe algorithm was stopped at ", tstop, ", since the value of the cumulative integral of the approximation is ", 
-                cumIntegral, switch(1 + tex, " >= ", " $\\geq$ "), 
-                "1 - tol.", sep = "")
-        else cat("\nThe algorithm was stopped at ", tstop, " and the value of the cumulative integral of the approximation is ", 
-            cumIntegral, ".", sep = "")
-    }
-    cat("\nThe total number of iterations is ", it,  
-        " and the user time employed was ", format(sum(attr(obj, 
-            "CPUTime")[, 1]), 2), " (in seconds).", sep = "")
-    cat("\n\n")
+    	lower <- attr(obj, "Steps")[index, 1]
+    	upper <- attr(obj, "Steps")[index, 2]
+
+	y[, 2] <- attr(obj, "Steps")[index, 3]
+    	y[, 3] <- attr(obj, "cumIntegral")
+    	y[, 4] <- (upper - lower)/y[, 2]
+    	y[, 5] <- attr(obj, "CPUTime")[,1]
+
+	it <- sum(y[setdiff(index, jumps), 4])
+	ut <- sum(y[, 5])
+	y <- format(y, digits = digits, ...)
+    	y[,1] <- paste("(", format(lower, digits = digits, ...), ", ", format(upper, digits = digits, ...), "]", sep="")
+
+	paragraph <- paste(vskip, noindent, "The f.p.t. density has been approximated from ", ArgsFPTL$t0, " to ", ArgsFPTL$T, " using a ", ifelse(Args$variableStep, "variable", "fixed"), 
+		" integration step", ifelse(Args$skip, " and avoiding the application of the numerical algorithm in those subintervals in which this is possible", 
+		""), ".", sep = "")
+
+	j <- length(jumps)
+	if (j > 0L){		
+		paragraph <- paste(paragraph, " In particular, in this case it has avoided the application of the numerical algorithm on the subinterval", rep("s:", j > 1L), " ", paste(y[jumps, 1], c(rep(", ", max(0L, j - 2)), 
+					rep(" and ", j > 1L), character(1)), sep = "", collapse = ""), ".", sep = "")
+		y[jumps, 4] <- "0"
+	}
+	else paragraph <- paste(paragraph, " In particular, in this case no interval has been avoided in the application of the numerical algorithm.", sep = "")
+
+	cat(aux(paragraph, 125L), sep = "\n")
+
+    	cumI <- attr(obj, "cumIntegral")[nI]
+	tstop <- paste(dollar, "t", dollar, " = ", format(upper[nI], digits = digits, ...), sep = "")
+    		 
+	if (to.T) paragraph <- paste(vskip, noindent, "The value of the cumulative integral of the approximation is ", format(cumI, digits = digits), ".", sep = "")
+	else {        
+        	if ((cumI > Args$tol) & (nI < nrow(attr(obj, "Steps")))) 
+            	paragraph <- paste(vskip, noindent, "The algorithm was stopped at ", tstop, ", since the value of the cumulative integral of the approximation is ", format(cumI, digits = digits), 
+				ifelse(tex, " $\\geq$ ", " >= "), "1 - tol.", sep = "")
+        	else paragraph <- paste(vskip, noindent, "The algorithm was stopped at ", tstop, " and the value of the cumulative integral of the approximation is ", format(cumI, digits = digits), ".", sep = "")
+    	}
+    	paragraph <- paste(paragraph, " The total number of iterations is ", format(it,...), " and the user time employed was ", format(ut,...), " (in seconds).", sep = "")
+
+	cat(aux(paragraph, 125L), sep = "\n")
+    	
+	cat(vskip, noindent, "The table below shows the approximation process step by step:", sep = "")
+	labels <- c("Subintervals", "Integration steps", "Cumulative integral", "Iterations", "User time")
+
+	if (tex){
+		y[,1] <- paste("{", y[,1], "}", sep = "")
+		labels <- paste("\\fbox{", labels, "}", sep = "")
+		cat("\n\\fboxrule 0pt \\fboxsep 2pt")
+		cat("\n\\begin{longtable}{|", rep("r|", ncol(y)), "}", sep = "")
+		cat("\n\\hline ")
+		endhead <- paste("\\multicolumn{1}{", c("|", character(ncol(y)-1L)), ">{\\columncolor[gray]{0.7}}c|}{", labels, "}", sep = "")
+		cat(endhead, sep = " & \n")
+		cat("\\\\ \\hline \\endfirsthead \\multicolumn{", ncol(y), "}{c}{\\tiny Continued from previous page} \\\\ \\hline ", "\n", sep = "")
+		cat(endhead,  sep = " & \n")
+		cat("\\endhead \\multicolumn{", ncol(y), "}{c}{\\tiny Continued on next page} \\endfoot \\endlastfoot", sep = "")
+		cat(paste("\n", apply(y, 1, paste, collapse = " & "), " \\\\", sep = ""))
+		cat(" \\hline")
+		cat("\n\\end{longtable}")
+		cat("\n")		
+	}
+	else{			
+		y <- rbind(labels, y)
+		y <- apply(y, 2, format, digits = digits, justify = "right")
+		cat("\n\n")
+		cat(apply(y, 1, paste, collapse = "  "), sep = "\n")						
+	}	
 }

@@ -3,7 +3,7 @@
 \alias{summary.fptl}
 \alias{is.summary.fptl}
 \alias{print.summary.fptl}
-\title{Locating the First-Passage-Time Variable}
+\title{Locating a Conditioned First-Passage-Time Variable}
 \description{
 \code{summary.fptl} summary method for class \dQuote{fptl}.
 
@@ -29,7 +29,7 @@ is.summary.fptl(obj)
 }
 \details{
 The \code{summary.fptl} function extracts the information contained in \code{object} about the
-location of the variation range of the first-passage-time (f.p.t.) variable. \cr
+location of the variation range of a conditioned first-passage-time (f.p.t.) variable. \cr
 
 It makes an internal call to \code{\link{growth.intervals}} function in order to determine the time instants 
 \eqn{t_i, \ i=1, \ldots, m}{t[i], i=1,...,m}, from which the First-Passage-Time Location (FPTL)
@@ -57,21 +57,37 @@ where \deqn{T_i = min \big\{ t_{max,i} + k \thinspace (t_{max,i}-t_i^*)(1 - p_{m
 \code{print.summary.fptl} displays an object of class \dQuote{summary.fptl} for immediate understanding of the information it contains.
 }
 \value{
-The \code{summary.fptl} function computes and returns an object of class \dQuote{summary.fptl}. It is a matrix whose
-columns correspond to \eqn{t_i}{t[i]}, \eqn{t_i^*}{t[i]*}, \eqn{t_{max,i}^{-}}{tmax[i]^-}, \eqn{t_{max,i}}{tmax[i]}
-and \eqn{t_{max,i}^{+}}{tmax[i]^+} values.
+The \code{summary.fptl} function computes and returns an object of class \dQuote{summary.fptl} and length 1. \cr
+
+An object of class \dQuote{summary.fptl} is a list of length 1 for a conditioned f.p.t problem, or of the same length as the number of 
+values selected from the non-degenerate initial distribution for an unconditioned f.p.t problem. 
+Each component of the list is again a named list with two components: \cr
+\item{instants}{a matrix whose columns correspond to \eqn{t_i}{t[i]}, \eqn{t_i^*}{t[i]*}, 
+\eqn{t_{max,i}^{-}}{tmax[i]^-}, \eqn{t_{max,i}}{tmax[i]}and \eqn{t_{max,i}^{+}}{tmax[i]^+} values for each conditioned f.p.t problem.} \cr 
+\item{FPTLValues}{the matrix of values of the FPTL function on \code{instants}.} \cr
+
 It also includes four additional attributes:
-\item{Call}{the unevaluated function call.}
-\item{FPTLValues}{matrix of values of the FPTL function for the interesting time instants in each subinterval \eqn{I_i}{I[i]}, by rows.
-Its columns correspond to \eqn{FPTL(t_i)}{FPTL(t[i])}, \eqn{FPTL(t_i^*)}{FPTL(t[i]*)}, \eqn{FPTL(t_{max,i}^{-})}{FPTL(tmax[i]^-)},
-\eqn{FPTL(t_{max,i})}{FPTL(tmax[i])} and \eqn{FPTL(t_{max,i}^{+})}{FPTL(tmax[i]^+)} values.}
-\item{FPTLCall}{the unevaluated FPTL function call that resulted in the object used
-as \code{object} argument in the function call.}
-\item{dp}{the object used as \code{dp} argument in the FPTL function call that resulted in the \code{object} argument
-in the function call. \cr \cr}
+\tabular{rl}{
+\code{Call} \tab a list of the unevaluated calls to the \code{summary.fptl} function, substituting each name \cr
+\code{} \tab in these calls by its value when the latter has length 1. \cr
+\code{FPTLCall} \tab a list of the unevaluated calls to the \code{FPTL} function that resulted in the objects  \cr
+\code{} \tab used as \code{object} argument in \code{Call}. \cr
+\code{dp} \tab the common object used as \code{dp} argument in the unevaluated calls to the \code{FPTL} \cr 
+\code{} \tab function in \code{FPTLCall}. \cr
+\code{vars} \tab NULL or a list containing the common values of names in \code{FPTLCall} for those names \cr
+\code{} \tab with values of length greater than 1. \cr
+}
+
+For an unconditioned f.p.t problem, the object includes the additional attribute \code{id} specifying the non-degenerate initial distribution. \cr 
+
+The attribute \dQuote{\code{summary.fptl}} of the value (of class \dQuote{fpt.density}) of the \code{Approx.fpt.density} function is 
+an object of class \code{summary.fptl} of length 1 for a conditioned problem, and of length greather than 1 for an unconditioned problem. 
+It is created from one or successive internal calls to the \code{summary.fptl} function. \cr
 
 \code{is.summary.fptl} returns \code{TRUE} or \code{FALSE} depending on whether its argument is an object of class
-\dQuote{summary.fptl} or not.}
+\dQuote{summary.fptl} or not. \cr
+}
+
 \references{
 Román, P., Serrano, J. J., Torres, F. (2008) First-passage-time location function: Application to determine
 first-passage-time densities in diffusion processes. \emph{Comput. Stat. Data Anal.}, \bold{52}, 4132--4146.
@@ -81,8 +97,11 @@ densities for diffusion processes based on the FPTL function. \emph{Applied Math
 }
 \author{Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz.}
 \seealso{
-\code{\link{Approx.fpt.density}} to approximate f.p.t. densities from objects of class \dQuote{summary.fptl} 
-and create objects of class \dQuote{fpt.density}.
+\code{\link{Approx.cfpt.density}} to approximate densities of f.p.t. variables conditioned to a fixed initial value
+from objects of class \dQuote{summary.fptl} and create objects of class \dQuote{fpt.density}.
+
+\code{\link{Approx.fpt.density}} to approximate densities of conditioned or unconditioned f.p.t. variables and create objects of 
+class \dQuote{fpt.density} from objects of class \dQuote{dp}.
 
 \code{\link{FPTL}} to evaluate the FPTL function and create objects of class \dQuote{fptl}.
 
@@ -93,7 +112,9 @@ and create objects of class \dQuote{fpt.density}.
 \examples{
 ## Continuing the FPTL(.) example:
 \dontshow{Lognormal <- diffproc(c("m*x","sigma^2*x^2","dnorm((log(x)-(log(y)+(m-sigma^2/2)*(t-s)))/(sigma*sqrt(t-s)),0,1)/(sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+(m-sigma^2/2)*(t-s),sigma*sqrt(t-s))")) ;
-b <- "4.5 + 4*t^2 + 7*t*sqrt(t)*sin(6*sqrt(t))" ; y <- FPTL(dp = Lognormal, t0 = 0, T = 18, x0 = 1, S = b, list(m = 0.48, sigma = 0.07))}
+b <- "4.5 + 4*t^2 + 7*t*sqrt(t)*sin(6*sqrt(t))" ; y <- FPTL(dp = Lognormal, t0 = 0, T = 18, x0 = 1, S = b, list(m = 0.48, sigma = 0.07));
+LognormalFEx <- diffproc(c("`h(t)`*x", "sigma^2*x^2", "dnorm((log(x)-(log(y)+`H(s,t)`-(sigma^2/2)*(t - s)))/(sigma*sqrt(t-s)),0,1)/(sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+ `H(s,t)`-(sigma^2/2)*(t-s),sigma*sqrt(t-s))"));
+z <- FPTL(dp = LognormalFEx, t0 = 1, T = 10, x0 = 1, S = 15, env = list(sigma=0.1, `h(t)` = "t/4", `H(s,t)` = "(t^2-s^2)/8"))}
 ## Summarizing an object of class fptl
 yy <- summary(y)
 yy
@@ -103,8 +124,12 @@ yy1
 yy2 <- summary(y, zeroSlope = 0.001, p0.tol = 10)
 yy2
 
+zz <- summary(z)
+zz
+
 ## Testing summary.fptl objects
 is.summary.fptl(yy)
+is.summary.fptl(zz)
 }
 \keyword{classes}
 \keyword{array}

@@ -1,80 +1,93 @@
 print.fpt.density <-
 function (x, ...) 
 {
-    if (!is.fpt.density(x)) 
-        stop(paste(sQuote("x"), "is not of class", shQuote("fpt.density")))
+    	if (!is.fpt.density(x)) 
+        	stop(paste(sQuote("x"), "is not of class", shQuote("fpt.density")))
 
-    y <- data.frame(matrix(, nrow = length(attr(x, "cumIntegral")), ncol = 7))
-    row.names(y) <- paste("Subinterval", 1:length(attr(x,"cumIntegral")), " ")	        
-    names(y) <- c("Lower end", "Upper end", "Integration step", 
-            "Cumulative integral", "Iterations", "User time", 
-            "System time")
-    y[, 1:2] <- format(attr(x, "Steps")[1:length(attr(x, "cumIntegral")), 
-        1:2], ...)
+	cp <- is.null(x$y.x0)
+    	A <- attr(x, "Call")
+	f <- A[[1]]
+	Args <- formals(eval(f))
+	logic <- (as.character(f) == "Approx.fpt.density")
+    	Args[names(A)[-1]] <- A[-1]
 
-    y[, 3] <- attr(x, "Steps")[1:length(attr(x, "cumIntegral")), 
-        3]    
-    y[, 4] <- attr(x, "cumIntegral")
+	t0 <- attr(attr(x, "summary.fptl"), "FPTLCall")[[1]]$t0
+	T <- attr(attr(x, "summary.fptl"), "FPTLCall")[[1]]$T
 
-    y[, 5] <- (attr(x, "Steps")[1:length(attr(x, "cumIntegral")), 
-        2] - attr(x, "Steps")[1:length(attr(x, "cumIntegral")), 
-        1])/attr(x, "Steps")[1:length(attr(x, "cumIntegral")), 
-        3]
-    it <- format(sum(y[!attr(x, "skips"), 5]), ...)
+    	cutoff <- options()$deparse.cutoff
+    	options(deparse.cutoff = 175)
+  
+    	cat("\nAn object of class", shQuote("fpt.density"), "containing")
+    	cat(paste("\n   $x: a sequence of", length(x$x), "time instants from", ifelse(t0 < x$x[1], format(x$x[1], ...), t0), "to", 
+		ifelse(x$x[length(x$x)] < T, format(x$x[length(x$x)], ...), T), sep = " "))	
+    	cat("\n   $y: the values of the approximate first-passage-time density function on sequence x")
 
-    y[, 6:7] <- attr(x, "CPUTime")
-    ut <- format(sum(y[, 6]), ...)
+    	cat("\n\nCall:")
+    	cat("\n")
+    	print(attr(x, "Call"))
 
-    y <- format(y, ...)
-    y[attr(x, "skips"), 3] <- ""
-    y[attr(x, "skips"), 5] <- 0
-	    
-    cat("\nAn object of class", shQuote("fpt.density"), "containing")
-    cat(paste("\n   $ x: a sequence of", length(x$x), "time instants from", 
-        y[1,1], "to", y[length(attr(x, "cumIntegral")),2], sep = " "))	
-    cat("\n   $ y: the values of the approximate first-passage-time density function on sequence x")
-    cat("\n\nCall:\n")
-    cat(deparse(attr(x, "Call"), width.cutoff = 500), "\n")
+    	cat("\nSpecified options to apply the numerical algorithm:")
 
-    cat("\n\nSpecified options to apply the numerical algorithm:")
-    args <- as.list(attr(x, "Call"))[-1]
-    if (is.element("variableStep", names(args))) 
-        variableStep <- as.logical(as.character(args$variableStep))
-    else variableStep <- TRUE
-    cat("\n\nVariable integration step                                                              ", 
-        variableStep)
-    if (is.element("from.t0", names(args))) 
-        from.t0 <- as.logical(as.character(args$from.t0))
-    else from.t0 <- FALSE
-    cat("\nCalculate the approximation from the lower end of the interval considered              ", 
-        from.t0)
-    if (is.element("to.T", names(args))) 
-        to.T <- as.logical(as.character(args$to.T))
-    else to.T <- FALSE
-    cat("\nCalculate the approximation to the upper end of the interval considered                ", 
-        to.T)
-    if (is.element("skip", names(args))) 
-        skip <- as.logical(as.character(args$skip))
-    else skip <- TRUE
-    cat("\nSkip the intervals at which the FPTL function is near zero                             ", 
-        skip)
-    if (is.element("tol", names(args))) 
-        tol <- args$tol
-    else tol <- 1e-03
-    # cat("\nStop the algorithm if the cumulative integral of the approximation is over    a        ",
-    cat("\nStop the algorithm if the cumulative integral at appropriate time instants is over     ", 
-        1 - tol)
-    if (variableStep) {
-        if (is.element("n", names(args))) 
-            n <- args$n
-        else n <- 250
-        cat("\n\nNumber of points to determine optimal integration steps where the f.p.t. density")
-        cat("\nfunction increases or decreases significantly according to the FPTL function           ", 
-            n)        
-    }
-    cat("\n\n\nApplication summary of the numerical algorithm:\n\n")    	
-    print(y)	
-    cat("\n\nTotal number of iterations   ", it)
-    cat("\nTotal user time              ", ut)
-    cat("\n\n")
+    	label <- c("Variable integration step", "Calculate the approximation from the lower end of the interval considered",
+				"Calculate the approximation to the upper end of the interval considered", 
+				"Skip the subintervals at which the FPTL decreases and the density of f.p.t. is almost zero",
+				"Stop the algorithm if the cumulative integral at potential final time instants is over")				
+	if (!cp) label <- c(label, "Number of equally spaced values considered in the range of the initial distribution") 
+	if (logic) label <- c(label, "Maximum slope required between two points to consider that a growing function is constant", 
+					"Ratio of the global increase of the FPTL function in the growth subinterval [t[i], tmax[i]]", 
+					"that should be reached to consider that it begins to increase significantly",
+					"Maximum allowable distance between tmax[i] and tmax[i]^+")
+	label <- c(label, "Number of points per amplitude unit used to determine optimal integration steps in [t[i]*, tmax[i]^+]",
+			"Number of points per amplitude unit used to determine optimal integration step in [tmax[i]^+, t[i+1]*]", 
+			"when (t[i+1]* - tmax[i]^+) <= (tmax[i]^- - t[i]*)",
+			"Number of points per amplitude unit used to determine optimal integration step in [tmax[i]^+, t[i+1]*]", 
+			"when (t[i+1]* - tmax[i]^+) > (tmax[i]^- - t[i]*)") 
+    	label <- paste("   ", format(label), "   ")
+	values <- as.character(c(Args[c("variableStep", "from.t0", "to.T", "skip")], 1 - Args$tol))
+	if (!cp) values <- c(values, as.character(Args$m))
+	if (logic) values <- c(values, as.character(Args$zeroSlope), paste("10^(-", Args$p0.tol, ")", sep = ""), "", paste(Args$k, "*(tmax[i] - t[i]*)(1-FPTL(tmax[i]))", sep = ""))
+	values <- c(values, paste(Args$n, "/(tmax[i]^- - t[i]*)", sep = ""), paste(Args$p, "*", Args$n, "/(tmax[i]^- - t[i]*)", sep = ""), "",
+			ifelse(Args$alpha == 1L, paste(Args$p, "*", Args$n, "/(tmax[i]^- - t[i]*)", sep = ""), paste(Args$p, "*", Args$n, 
+			"*(t[i+1]* - tmax[i]^+)^(", Args$alpha - 1L, ")/(tmax[i]^- - t[i]*)^", Args$alpha, sep = "")), "")
+	label <- paste(label, values)
+    	cat("\n\n")
+    	cat(label, sep= "\n")
+
+    	nI <- length(attr(x, "cumIntegral"))
+    	index <- 1:nI
+    	y <- data.frame(matrix(, nrow = nI, ncol = 5))
+    	names(y) <- c("Subinterval", "Integration step", "Cumulative integral", "Iterations", "User time")
+    
+    	lower <- attr(x, "Steps")[index, 1]
+    	upper <- attr(x, "Steps")[index, 2]
+
+	if (cp) m <- 1L
+	else{
+		m <- Args$m
+	      if (is.null(m)) m <- 100L
+	}
+    	jumps <- which(sapply(attr(x, "skips"), identical, 1:m))
+
+    	y[, 2] <- attr(x, "Steps")[index, 3]
+    	y[, 3] <- attr(x, "cumIntegral")
+    	y[, 4] <- (upper - lower)/y[, 2]
+    	y[, 5] <- attr(x, "CPUTime")[,1]
+
+	if (length(jumps) > 0L) y[jumps, 4] <- 0L
+
+    	it <- format(sum(y[setdiff(index, jumps), 4]), ...) 
+    	ut <- format(sum(y[, 5]), ...)
+
+    	y <- format(y, ...)
+    	y[,1] <- paste("(", format(lower, ...), ", ", format(upper, ...), "]", sep="")      					                    		  
+    
+    	cat("\nApplication summary of the numerical algorithm:\n\n")       	
+    	y <- rbind(c("Subinterval", "Integration step", "Cumulative integral", "Iterations", "User time"), y)
+	y <- apply(y, 2, format, justify = "right")
+	cat(apply(y, 1, paste, collapse = "  "), sep = "\n")
+    	label <- paste(format(c("Total number of iterations", "Total user time")), "   ", c(it, ut))
+    	cat("\n")
+    	cat(label, sep= "\n")
+
+    	options(deparse.cutoff = cutoff)
 }
