@@ -1,30 +1,62 @@
 print.summary.fptl <-
 function (x, ...) 
 {
-    if (!is.summary.fptl(x)) 
-        stop(paste(sQuote("x"), "is not of class", shQuote("summary.fptl")))
+      if (!is.summary.fptl(x)) 
+      	stop(paste(sQuote("x"), "is not of class", shQuote("summary.fptl")))
 
-    cat("\nCall:\n")
-    print(attr(x, "Call"))
-    args <- as.list(attr(x, "Call"))[-1]
-    if (is.element("zeroSlope", names(args))) zeroSlope <- eval(args$zeroSlope) else zeroSlope <- 0.01
-    if (is.element("p0.tol", names(args))) p0.tol <- eval(args$p0.tol) else p0.tol <- 8
-    if (is.element("k", names(args))) k <- eval(args$k) else k <- 3
-			
-    cat("\nFPTLCall:\n")
-    print(attr(x, "FPTLCall"))
-    cat("\n\nSlope to consider that a growing function is constant                 ", zeroSlope)
-    cat("\nNumber of time instants from which the FPTL function starts growing   ", nrow(x))
-    cat("\nParameter that controls where the FPTL function begins to increase    ")
-    cat("\nsignificantly                                                         ", p0.tol)
-    cat("\nParameter that controls where the FPTL function decrease slowly       ", k)
-    cat("\n\n\nInteresting time instants:\n\n")
-    y <- x[1:nrow(x), ]
-    if (!is.matrix(y)) 
-        y <- matrix(y, nrow = 1)
-    labels <- c("t[i]", "t[i]*", "tmax[i]^-", "tmax[i]", "tmax[i]^+")
-    dimnames(y) <- list(format(paste("Subinterval", 1:nrow(y), " ")), 
-        labels)
-    print(y, ...)
-    cat("\n")
+	Args <- formals(summary.fptl)
+	labelCols = c("t[i]", "t[i]*", "tmax[i]^-", "tmax[i]", "tmax[i]^+")
+	label <- format(c("Maximum slope required between two points to consider that a growing function is constant", 
+					"Ratio of the global increase of the FPTL function in the growth subinterval [t[i], tmax[i]]", 
+					"that should be reached to consider that it begins to increase significantly",
+					"Maximum allowable distance between tmax[i] and tmax[i]^+"))
+	
+	cutoff <- options()$deparse.cutoff
+	options(deparse.cutoff = 175)
+	
+	Call <- attr(x, "Call")
+	FPTLCall <- attr(x, "FPTLCall")
+	X0 <- paste("x0 =", format(sapply(FPTLCall, "[[", "x0"), ...))
+
+	A <- Call[[1]][-1]
+	Args[names(A)] <- A
+	logic <- is.name(A$object)
+	
+	for (i in 1:length(x)){
+		cat("\n")
+		cat(X0[i])
+		cat("\n\n    Interesting time instants:\n\n")
+		y <- x[[i]]$instants			
+		dimnames(y) <- list(rep("    ", nrow(y)), labelCols)			
+		print(y, ...)
+
+		cat("\n    Call:")
+		cat("\n    ")
+ 		print(Call[[i]])
+
+		if (logic){
+			cat("\n    attr(", A$object, ", ", shQuote("Call"), "):", sep="")
+			cat("\n    ")   		
+			print(FPTLCall[[i]])		
+		}
+	}
+
+	label <- paste(label, c(as.character(Args$zeroSlope), paste("10^(-", Args$p0.tol, ")", sep = ""), "", paste(Args$k, "*(tmax[i] - t[i]*)(1-FPTL(tmax[i]))", 
+				sep = "")), sep = "   ")
+
+	cat("\n\n")
+	cat(label, sep= "\n")
+
+	dp <- FPTLCall[[1]][["dp"]]
+	if (is.name(dp)) cat("\n", dp, ":", sep="") else cat("\ndp:")		
+	print(attr(x, "dp"))
+
+	v <- attr(x, "vars")
+    	if (!is.null(v)){
+		if (logic) cat("Values of names which occur in attr(", A$object, ", ", shQuote("Call"), "):\n", sep = "") 
+		else cat("Values of names which occur in Call:\n") 
+		print(v)		
+    	}
+
+	options(deparse.cutoff = cutoff)
 }

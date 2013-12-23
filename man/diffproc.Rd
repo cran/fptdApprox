@@ -32,11 +32,16 @@ is.diffproc(obj)
 The main goal of the \code{diffproc} function is to validate the mathematical expressions in the given character string vector or list.
 If no errors happen, the function converts the input into an object of class \dQuote{diffproc}. Otherwise, the function reports the errors.
 
-The mathematical expressions of the infinitesimal mean and variance should be expressions in \eqn{x} and \eqn{t}, \eqn{A_1(x,t)}{A1(x,t)} and \eqn{A_2(x,t)}{A2(x,t)}, respectively.
+The mathematical expressions of the infinitesimal mean and variance should be expressions in \eqn{x} and \eqn{t}, \eqn{A_1(x,t)}{A1(x,t)} 
+and \eqn{A_2(x,t)}{A2(x,t)}, respectively.
 
-The mathematical expressions of the transition probability density and distribution functions should be expressions in \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}, \eqn{f(x,t|y,s)} and \eqn{F(x,t|y,s)}, respectively.
+The mathematical expressions of the transition probability density and distribution functions should be expressions in \eqn{x}, \eqn{t}, \eqn{y} 
+and \eqn{s}, \eqn{f(x,t|y,s)} and \eqn{F(x,t|y,s)}, respectively.
 
-In addition, all mathematical expressions may depend on other parameters.
+In addition, all mathematical expressions may depend on generic parameters and functions of \eqn{t}, or \eqn{s} and \eqn{t},
+referred by name. To name the expression of a function \eqn{h(u)} we can use 
+\eqn{\grave{} \thinspace}{}\if{text}{`}\if{html}{\out{&#96;}}\code{h(u)}\eqn{\grave{}}{}\if{text}{`}\if{html}{\out{&#96;}}
+if we want to show its dependence on \eqn{u}, or \code{h} otherwise. \cr
 
 The function checks if the mathematical expressions show syntax errors and if \R can compute the symbolic derivative with respect 
 to \eqn{x} for the infinitesimal variance and transition probability density function. 
@@ -63,7 +68,7 @@ particular about the functions provided in \R to evaluate probability density fu
 }
 \examples{
 ## Creating a diffproc object for the lognormal diffusion process
-x <- c("m*x","sigma^2*x^2",
+x <- c("m*x", "sigma^2*x^2",
        "dnorm((log(x)-(log(y)+(m-sigma^2/2)*(t-s)))/(sigma*sqrt(t-s)),0,1)/
        (sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+(m-sigma^2/2)*(t-s),
        sigma*sqrt(t-s))") 
@@ -72,7 +77,7 @@ Lognormal <- diffproc(x)
 Lognormal
 
 ## Creating a diffproc object for the Ornstein Uhlenbeck diffusion process
-x <- c("alpha*x + beta","sigma^2","dnorm((x-(y*exp(alpha*(t-s))-beta*
+x <- c("alpha*x + beta", "sigma^2", "dnorm((x-(y*exp(alpha*(t-s))-beta*
        (1-exp(alpha*(t-s)))/alpha))/(sigma*sqrt((exp(2*alpha*(t-s)) - 1)/
        (2*alpha))),0,1)/(sigma*sqrt((exp(2*alpha*(t-s)) - 1)/(2*alpha)))",
        "pnorm(x, y*exp(alpha*(t-s)) - beta*(1 - exp(alpha*(t-s)))/alpha,
@@ -81,9 +86,18 @@ x <- c("alpha*x + beta","sigma^2","dnorm((x-(y*exp(alpha*(t-s))-beta*
 OU <- diffproc(x)
 OU
 
+## Creating a diffproc object for the lognormal diffusion process with exogenous factors
+x <- c("`h(t)`*x", "sigma^2*x^2", "dnorm((log(x)-(log(y)+`H(s,t)`-(sigma^2/2)*
+       (t - s)))/(sigma*sqrt(t-s)),0,1)/(sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+
+       `H(s,t)`-(sigma^2/2)*(t-s),sigma*sqrt(t-s))")
+    
+LognormalFEx <- diffproc(x)
+LognormalFEx
+
 ## Testing diffproc objects
 is.diffproc(Lognormal)
 is.diffproc(OU)
+is.diffproc(LognormalFEx)
 }
 \keyword{classes}
 \keyword{list}

@@ -16,17 +16,23 @@ For a complete list of functions, use library(help=\dQuote{fptdApprox}).
 \tabular{ll}{
 Package: \tab fptdApprox\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2012-11-28\cr
+Version: \tab 2.0\cr
+Date: \tab 2013-12-23\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }
 The \pkg{fptdApprox} package allows to approximate efficiently the f.p.t. density for a diffusion process
-through a continuous time-dependent boundary. First, the diffusion process under consideration must be defined by using the function 
+through a continuous time-dependent boundary in the cases of conditioned and unconditioned f.p.t. problems.
+
+For an unconditioned f.p.t. problem, a step by step study can be performed.
+First, the diffusion process under consideration must be defined by using the function 
 \code{\link{diffproc}}. Then, the \code{\link{FPTL}} function will be used to calculate the FPTL function for the specified 
 process and boundary. The information provided by the function is then extracted by the method \code{\link{summary.fptl}} and used to find the range of 
-variation of the f.p.t. variable. Finally, such information is used by the function \code{\link{Approx.fpt.density}}
+variation of the f.p.t. variable. Finally, such information is used by the function \code{\link{Approx.cfpt.density}}
 to obtain the approximation of the f.p.t. density.
+
+In the general case (conditioned and unconditioned f.p.t. problems) the function \code{\link{Approx.fpt.density}}
+allows to obtain directly the approximate f.p.t. density.
 }
 \author{Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz.
 

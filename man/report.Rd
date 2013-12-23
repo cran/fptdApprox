@@ -15,8 +15,8 @@ report(obj, \dots)
 }
 \details{  
   The functions \code{\link{report.summary.fptl}} and \code{\link{report.fpt.density}} are examples
-  of particular methods which report the results produced by \code{\link{summary.fptl}}
-  and \code{\link{Approx.fpt.density}} functions.
+  of particular methods which report objects of class \dQuote{summary.fptl} 
+  and \dQuote{fpt.density}.
 }
 \value{
   The form of the value returned by \code{report} depends on the class of its argument.  

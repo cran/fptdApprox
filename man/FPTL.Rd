@@ -12,7 +12,7 @@
 \code{print.fptl} shows an object of class \dQuote{fptl}.
 }
 \usage{
-FPTL(dp, t0, T, x0, S, env = NULL, n = 10000)
+FPTL(dp, t0, T, x0, S, env = NULL, n = 4000)
 
 is.fptl(obj)
 
@@ -23,25 +23,17 @@ is.fptl(obj)
   \item{obj}{an \R object to be tested.}
   \item{x}{an object of class \dQuote{fptl}, a result of a call to this function.}
   \item{t0, T}{lower and upper limits of the considered time interval. Must be finite.}
-  \item{x0}{initial value of process in the time instant specified in the \code{t0} argument.}
-  \item{S}{character string with the mathematical expression of the boundary.}
-  \item{env}{a list object that contains the unspecified parameters in the \code{dp} object and \code{S}. 
-  It is copied into a temporary environment for evaluating the mathematical expressions in the \code{dp} object and \code{S}.}
-  \item{n}{number of points spanning the considered time interval.}
+  \item{x0}{fixed initial value of process in the time instant specified in the \code{t0} argument.}
+  \item{S}{numerical value of a constant boundary or character string with the mathematical expression of a time-dependent boundary.}
+  \item{env}{a named list of objects of numeric or character type specifying the values of names which occur in
+  the mathematical expressions in objects \code{dp} and \code{S}, or of names which occur in the specification of the previous values.
+  Defaults to NULL, interpreted as an empty list.} 
+  \item{n}{number of points at which the FPTL function is evaluated.}
   \item{\dots}{additional arguments potentially passed (currently none is considered).}
 }
 \details{
-The mathematical expression of the boundary \code{S} should be a function of \eqn{t} and may include arguments \code{t0},
-\code{x0} and the parameters specified in the \code{env} argument. The \code{FPTL} function checks if the mathematical expression 
-shows syntax errors and if \R can compute its symbolic derivative with respect to \eqn{t}.
-		
-The \code{env} argument is a list of tagged values in \code{parameter = value} form for the unspecified parameters in the \code{dp} object
-and \code{S} other than \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}. Defaults to NULL, interpreted as an empty list. \R looks for the objects not found 
-into the temporary environment for evaluating \code{dp} object and \code{S} in the parent.frame()
-environment. \cr
-	
-The FPTL function for the problem of the first-passage-time of a diffusion process \eqn{X(t)}, \eqn{t_0 \leq t \leq T}{t0 \le t \le T}, through a 
-boundary \eqn{S(t)} is defined as
+The FPTL function for the problem of the first-passage-time of a diffusion process \eqn{\{X(t), t_0 \leq t \leq T \}}{{X(t), t0 \le t \le T}},  
+conditioned to \eqn{X(t_0) = x_0}{X(t0) = x0}, through a continuous boundary \eqn{S(t)} is defined as
 \ifelse{latex}{\deqn{FPTL(t) = \left\{
 \begin{array}{lll}
 P[ X(t)>S(t) \thinspace | \thinspace X(t_0)=x_0] = 1 - F(S(t),t|x_0,t_0) & & \mbox{if \ } x_0 < S(t_0) \vspace{5pt} \\
@@ -56,15 +48,32 @@ where \eqn{F(x,t|y,s)}{F(x,t|y,s)} is the transition probability distribution fu
 Initially, the FPTL function is evaluated at a sequence of n equally spaced values from \code{t0} to \code{T}. 
 Then the \code{FPTL} function makes an internal call to the \code{\link{growth.intervals}} function in order to study the growth
 of the evaluation vector. Finally, the FPTL function is evaluated at a more adequate sequence of values from \code{t0} to \code{T} according 
-to the abovementioned study.
+to the abovementioned study. \cr
+
+The mathematical expression of the boundary \code{S} should be a function of \eqn{t} and may include arguments \code{t0},
+\code{x0} and the parameters specified in the \code{env} argument. The \code{FPTL} function checks if the mathematical expression 
+shows syntax errors and if \R can compute its symbolic derivative with respect to \eqn{t}. \cr
+	
+The \code{env} argument is a list of tagged values in \code{name = value} form with \code{name} other than \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}.
+To name the expression of a function \eqn{h(u)} as a character string we can use 
+\eqn{\grave{} \thinspace}{}\if{text}{`}\if{html}{\out{&#96;}}\code{h(u)}\eqn{\grave{} \ }{}\if{text}{`}\if{html}{\out{&#96;}} \code{= value} 
+if we want to show its dependence on \eqn{u}, or \code{h = value} otherwise. \cr
+
+The \code{env} argument is copied into a temporary environment for evaluating the mathematical expressions in objects \code{dp} and \code{S}. 
+\R looks for the objects not found into this temporary environment in the parent.frame() environment. 
 }
 \value{
 The function \code{FPTL} computes and returns an object of class \dQuote{fptl}. It is a two-component list: 
 \item{x}{a sequence of n values from \code{t0} to \code{T}.}
 \item{y}{the corresponding values of the FPTL function for the \code{x} sequence.} \cr
-It also includes two additional attributes: \cr \cr
-\code{dp} \eqn{\qquad \qquad \qquad}{ } the object used as \code{dp} argument in the function call. \cr
-\code{Call} \eqn{\qquad \qquad \quad}{ } the unevaluated function call. \cr
+It also includes three additional attributes:
+\tabular{rl}{
+\code{Call} \tab the unevaluated function call, substituting each name in this call for its value when \cr 
+\code{} \tab the latter has length 1. \cr
+\code{dp} \tab the object used as \code{dp} argument in the function call. \cr 
+\code{vars} \tab NULL or a list containing the values of names in the function call for those names \cr 
+\code{} \tab with values of length greater than 1. \cr
+}
 
 \code{is.fptl} returns \code{TRUE} or \code{FALSE} depending on whether its argument is an object of class \dQuote{fptl} or not. \cr
 
@@ -86,18 +95,24 @@ densities for diffusion processes based on the FPTL function. \emph{Applied Math
 }
 \examples{
 % data(Lognormal)
-## Continuing the diffproc(.) example:
-\dontshow{Lognormal <- diffproc(c("m*x","sigma^2*x^2","dnorm((log(x)-(log(y)+(m-sigma^2/2)*(t-s)))/(sigma*sqrt(t-s)),0,1)/(sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+(m-sigma^2/2)*(t-s),sigma*sqrt(t-s))"))}
+## Continuing the diffproc(.) examples:
+\dontshow{Lognormal <- diffproc(c("m*x","sigma^2*x^2","dnorm((log(x)-(log(y)+(m-sigma^2/2)*(t-s)))/(sigma*sqrt(t-s)),0,1)/(sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+(m-sigma^2/2)*(t-s),sigma*sqrt(t-s))"));
+LognormalFEx <- diffproc(c("`h(t)`*x", "sigma^2*x^2", "dnorm((log(x)-(log(y)+`H(s,t)`-(sigma^2/2)*(t - s)))/(sigma*sqrt(t-s)),0,1)/(sigma*sqrt(t-s)*x)", "plnorm(x,log(y)+ `H(s,t)`-(sigma^2/2)*(t-s),sigma*sqrt(t-s))"))}
 ## Specifying a boundary
 b <- "4.5 + 4*t^2 + 7*t*sqrt(t)*sin(6*sqrt(t))"
 
-## Computing the FPTL function and creating an object of class fptl
-y <- FPTL(dp = Lognormal, t0 = 0, T = 18, x0 = 1, S = b, list(m = 0.48,
+## Computing FPTL functions and creating objects of class fptl
+y <- FPTL(dp = Lognormal, t0 = 0, T = 18, x0 = 1, S = b, env = list(m = 0.48,
           sigma = 0.07))
 y
 
+z <- FPTL(dp = LognormalFEx, t0 = 1, T = 10, x0 = 1, S = 15, env = list(sigma=0.1, 
+          `h(t)` = "t/4", `H(s,t)` = "(t^2-s^2)/8"))
+z
+          
 ## Testing fptl objects
 is.fptl(y)
+is.fptl(z)
 }
 \keyword{classes}
 \keyword{list}
