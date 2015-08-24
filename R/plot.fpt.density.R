@@ -16,7 +16,7 @@ function (x, from.t0, to.T, dp.legend = TRUE, dp.legend.cex = 1, ylab = TRUE, gr
 		Call <- attr(x, "Call")
 		Args <- as.list(Call[c("t0","T", "id")])
 	  	S <- Call$S
-		if (is.name(Args$id)) Args$id <- attr(attr(x, "summary.fptl"), "vars")[[as.character(Args$id)]][[2]] else Args$id <- Args$id[[3]]
+		if (is.list(Args$id)) Args$id <- Args$id[[2]] else Args$id <- attr(attr(x, "summary.fptl"), "id")[[2]]
 	  	env <- Call$env
 	  	if (!is.null(env)){
 			if (is.call(env)) Args <- c(Args, eval(env))
@@ -46,11 +46,10 @@ function (x, from.t0, to.T, dp.legend = TRUE, dp.legend.cex = 1, ylab = TRUE, gr
 		t1 <- attr(x, "summary.fptl")[[1]]$instants[1, 2]
 		t2 <- attr(x, "summary.fptl")[[1]]$instants[length(attr(x, "summary.fptl")[[1]]$instants)]		
 	}
-
+	
 	par(cex = 1, ps = 9)
     	par(mar = c(3 + 2 * instants, 3.25 + ylab, 2.5, 1) + 0.1, ...)        
     	pin.height <- par("pin")[2] - sum(par("mai")[c(1,3)]*(par("cex")-1))
-
     	if (dp.legend) {
 		dp.labels <- vector("list", 3)
 		if (ncp) dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), paste(t, "  in  ", group("[", 

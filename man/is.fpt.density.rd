@@ -22,6 +22,11 @@ An object of class \dQuote{fpt.density} is a three-component list:
   
 It also includes six additional attributes. For more details, see the values of \code{\link{Approx.cfpt.density}} and \code{\link{Approx.fpt.density}} functions.
 }
+\references{
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2012) An R package for an efficient approximation of first-passage-time densities for diffusion processes based on the FPTL function. \emph{Applied Mathematics and Computation}, \bold{218}, 8408--8428.
+
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2014) More general problems on first-passage times for diffusion processes: A new version of the fptdApprox R package. \emph{Applied Mathematics and Computation}, \bold{244}, 432--446.
+}
 \author{Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz.}
 \examples{
 ## Testing fpt.density objects

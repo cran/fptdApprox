@@ -3,9 +3,7 @@
 \alias{plot.fptl}
 \title{Plotting Method for fptl Objects}
 \description{
-  This function creates a plot of the First-Passage-Time Location (FPTL) function for a first-passage-time problem,
-  displaying the information of interest contained in an object of class \dQuote{fptl} and a corresponding object of class 
-  \dQuote{summary.fptl}.
+  This function creates a plot of the First-Passage-Time Location (FPTL) function for a first-passage-time problem, displaying the information of interest contained in an object of class \dQuote{fptl} and a corresponding object of class \dQuote{summary.fptl}.
 }
 \usage{
 \method{plot}{fptl}(x, sfptl, from.t0 = TRUE, to.T = TRUE, dp.legend = TRUE,  
@@ -30,19 +28,18 @@
   \item{\dots}{graphical parameters to set before generating the plot, see \code{\link{par}}.}
 }
 \details{
-	If the \code{sfptl} object is missing, the function makes an internal call to the \code{summary.fptl} function in order 
-	to identify the points of interest provided by the FPTL function.
+	If the \code{sfptl} object is missing, the function makes an internal call to the \code{summary.fptl} function in order to identify the points of interest provided by the FPTL function.
 
-	If the FPTL function shows at least a local maximum and \code{from.t0 = FALSE}, the FPTL function should be plotted from the 
-	first time instant from which the function starts growing.
+	If the FPTL function shows at least a local maximum and \code{from.t0 = FALSE}, the FPTL function should be plotted from the first time instant from which the function starts growing.
 	
-	If the FPTL function shows at least a local maximum and \code{to.T = FALSE}, the FPTL function should be plotted to the 
-  \eqn{t_{max,m}^{+}}{tmax[m]^+} value related to the last local maximum \eqn{t_{max,m}}{tmax[m]} if the function does not decrease subsequently, 
-  or to the local minimum following the last local maximum \eqn{t_{max,m}}{tmax[m]} if the function decreases subsequently.
+	If the FPTL function shows at least a local maximum and \code{to.T = FALSE}, the FPTL function should be plotted to the \eqn{t_{max,m}^{+}}{tmax[m]^+} value related to the last local maximum \eqn{t_{max,m}}{tmax[m]} if the function does not decrease subsequently, or to the local minimum following the last local maximum \eqn{t_{max,m}}{tmax[m]} if the function decreases subsequently.
 
 	If \code{dp.legend = TRUE}, a legend is placed in the top inside of the plot frame.
 	
 	Additional graphical arguments as \code{cex}, \code{lwd} and \code{ps} can be specified.
+}
+\references{
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2012) An R package for an efficient approximation of first-passage-time densities for diffusion processes based on the FPTL function. \emph{Applied Mathematics and Computation}, \bold{218}, 8408--8428.
 }
 \author{Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz.}
 \seealso{

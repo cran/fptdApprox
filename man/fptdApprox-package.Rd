@@ -7,8 +7,7 @@
 Approximation of First-Passage-Time Densities for Diffusion Processes
 }
 \description{
-This package contains several functions for an efficient approximation of first-passage-time (f.p.t.) densities for diffusion processes 
-based on the First-Passage-Time Location (FPTL) function.
+Efficient approximation of first-passage-time (f.p.t.) densities for diffusion processes based on the First-Passage-Time Location (FPTL) function.
 
 For a complete list of functions, use library(help=\dQuote{fptdApprox}).
 }
@@ -16,8 +15,8 @@ For a complete list of functions, use library(help=\dQuote{fptdApprox}).
 \tabular{ll}{
 Package: \tab fptdApprox\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2013-12-23\cr
+Version: \tab 2.1\cr
+Date: \tab 2015-08-24\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }
@@ -45,6 +44,7 @@ first-passage-time probability densities. \emph{Adv. Appl. Probab.}, \bold{19}, 
 Román, P., Serrano, J. J., Torres, F. (2008) First-passage-time location function: Application to determine
 first-passage-time densities in diffusion processes. \emph{Comput. Stat. Data Anal.}, \bold{52}, 4132--4146.
 
-P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2012) An R package for an efficient approximation of first-passage-time 
-densities for diffusion processes based on the FPTL function. \emph{Applied Mathematics and Computation}, \bold{218}, 8408--8428.
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2012) An R package for an efficient approximation of first-passage-time densities for diffusion processes based on the FPTL function. \emph{Applied Mathematics and Computation}, \bold{218}, 8408--8428.
+
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2014) More general problems on first-passage times for diffusion processes: A new version of the fptdApprox R package. \emph{Applied Mathematics and Computation}, \bold{244}, 432--446.
 }

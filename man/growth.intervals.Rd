@@ -3,8 +3,7 @@
 \alias{growth.intervals}
 \title{Studying the Growth of a Vector}
 \description{
-	For the vector of values resulting from the evaluation of a function, this function determines the positions of the values between
-	which the vector grows. 
+	For the vector of values resulting from the evaluation of a function, this function determines the positions of the values between which the vector grows. 
 }
 \usage{
 growth.intervals(x, y, zeroSlope = 0.01)
@@ -15,8 +14,7 @@ growth.intervals(x, y, zeroSlope = 0.01)
   \item{zeroSlope}{maximum slope (in degrees) required to consider that a growing function is constant.}
 }
 \details{
-The \code{growth.intervals} function ignores the pairs of values between which the vector \code{y} starts and stops growing if the slope 
-is less than \code{zeroSlope}. 
+The \code{growth.intervals} function ignores the pairs of values between which the vector \code{y} starts and stops growing if the slope is less than \code{zeroSlope}. 
 }
 \value{
 	This function returns NULL if the vector \code{y} is not growing. Otherwise, the

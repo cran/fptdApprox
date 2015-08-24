@@ -29,20 +29,21 @@
   \item{\dots}{graphical parameters to set before generating the plot, see \code{\link{par}}.}
 }
 \details{
-	If \code{from.t0} or \code{to.T} arguments are missing the function considers the corresponding arguments used in 
-	the call to \code{\link{Approx.cfpt.density}} or \code{\link{Approx.fpt.density}} functions, which in turn generated the \code{x} object. 
+	If \code{from.t0} or \code{to.T} arguments are missing the function considers the corresponding arguments used in the call to \code{\link{Approx.cfpt.density}} or \code{\link{Approx.fpt.density}} functions, which in turn generated the \code{x} object. 
 
-	If the approximate density functions were calculated from the lower end of the interval considered and \code{from.t0 = FALSE}, 
-	the approximate density functions should be plotted from the lower endlimit of the first subinterval in the attribute \code{Steps} 
+	If the approximate density functions were calculated from the lower end of the interval considered and \code{from.t0 = FALSE}, the approximate density functions should be plotted from the lower endlimit of the first subinterval in the attribute \code{Steps} 
   of the \code{x} object.
 	
-	If the approximate density functions were calculated to the upper end of the interval considered and \code{to.T = FALSE}, 
-	the approximate density functions should be plotted to the upper endlimit of last subinterval in the attribute \code{Steps} 
-  of the \code{x} object.
+	If the approximate density functions were calculated to the upper end of the interval considered and \code{to.T = FALSE}, the approximate density functions should be plotted to the upper endlimit of last subinterval in the attribute \code{Steps} of the \code{x} object.
 	
 	If \code{dp.legend = TRUE}, a legend is placed in the top inside of each plot frame.
 	
 	Additional graphical arguments as \code{cex}, \code{lwd} and \code{ps} can be specified.
+}
+\references{
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2012) An R package for an efficient approximation of first-passage-time densities for diffusion processes based on the FPTL function. \emph{Applied Mathematics and Computation}, \bold{218}, 8408--8428.
+
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2014) More general problems on first-passage times for diffusion processes: A new version of the fptdApprox R package. \emph{Applied Mathematics and Computation}, \bold{244}, 432--446.
 }
 \author{Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz}
 \seealso{

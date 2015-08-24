@@ -59,6 +59,11 @@ It is a four-component list:
   \item{tpdF}{character of length 1 with the mathematical expression of the transition probability distribution function of the process.} 
 \code{is.diffproc} returns \code{TRUE} or \code{FALSE} depending on whether its argument is an object of class \dQuote{diffproc} or not.
 }
+\references{
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2012) An R package for an efficient approximation of first-passage-time densities for diffusion processes based on the FPTL function. \emph{Applied Mathematics and Computation}, \bold{218}, 8408--8428.
+
+P. Román-Román, J.J. Serrano-Pérez, F. Torres-Ruiz. (2014) More general problems on first-passage times for diffusion processes: A new version of the fptdApprox R package. \emph{Applied Mathematics and Computation}, \bold{244}, 432--446.
+}
 \author{Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz.}
 \seealso{
 \code{\link{D}} to know more about the simple functions and expressions that support symbolic derivative in \R, and in 

@@ -27,7 +27,7 @@ function (obj)
                 if (inherits(try(parse(text = args$S), silent = TRUE), 
                   "try-error")) 
                   return(FALSE)
-                if (inherits(try(D(args$S, "t"), silent = TRUE), 
+                if (inherits(try(D(parse(text = args$S), "t"), silent = TRUE), 
                   "try-error")) 
                   return(FALSE)
 
