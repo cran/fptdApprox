@@ -1,7 +1,7 @@
-bd720918a31894c57265f618e7686763 *DESCRIPTION
+79ac652227c2fc9d7b4aa4b9739b37ad *DESCRIPTION
 d0f3ee9051f21a58529602a52a1ec111 *NAMESPACE
 748d0486299f5eb7a130b53eef4b11fa *R/Approx.cfpt.density.R
-e1c0b55194a6c4fdd04a2f5f392254c8 *R/Approx.fpt.density.R
+b5e52fd0b14112a908cb586dcfdef85b *R/Approx.fpt.density.R
 efc1f6e8f12e6e180fee0823a66bcf63 *R/FPTL.R
 56d6ff6ef8f78629560ce479ce661772 *R/Integration.Steps.R
 dfd31ac4c84a0fadc2e9b3d7cc0946e6 *R/as.diffproc.R
@@ -11,14 +11,14 @@ c85b0d36740d81e5989227e373bac023 *R/is.diffproc.R
 a760249844355bf8ee13d05fc5ed5d96 *R/is.fpt.density.R
 2f33de08cf3f44d2a6de86b3daa54a3c *R/is.fptl.R
 700aa8cb1aefadfd5d94e7690accbf92 *R/is.summary.fptl.R
-bc8a23aaedcb0d3d3858b7115ba69a3e *R/plot.fpt.density.R
+31f4fff954d6aa636fa9764441646980 *R/plot.fpt.density.R
 779f4db315a45fea904427b36ed0c2fe *R/plot.fptl.R
 fef6808cb68165a486c82c30fac5f713 *R/print.diffproc.R
 75435974aea02dd2fe6cfb21d1042d99 *R/print.fpt.density.R
 08b733f138becc2c1dd9b8d09e0ba598 *R/print.fptl.R
 409bd986796aa999635966697faa0943 *R/print.summary.fptl.R
 c0a8642bb5108fd39ed2bf02f4d8fc66 *R/report.R
-50bdfd9f2685c9ccf22180fd2d71a71a *R/report.fpt.density.R
+fe6d6702918451a748ee289996e3f8c9 *R/report.fpt.density.R
 684c5df668ac3fdca4d0eebc8e35355b *R/report.summary.fptl.R
 7285918f25dffbe494fbb33c1a142fea *R/summary.fptl.R
 96b8215e6d1cec0622552d2abf34fe9a *demo/00Index
@@ -31,7 +31,7 @@ e7862f2fd45b25247fa1019a3c130a4c *demo/NewGompertz.r
 8643e0674995d4b211e04029ba4cb6d1 *man/FPTL.Rd
 59d717ee654f03f96e28c8d7700770ba *man/Integration.Steps.Rd
 a19bfaf6210a4fde9551817856123854 *man/diffproc.Rd
-1bffaec09ec544b8f0fc5f0378271b18 *man/fptdApprox-package.Rd
+60883ba73bbc585ee1ba38d1177d4d7b *man/fptdApprox-package.Rd
 bc3d4f4de46ef9961010d311e1ee5e0d *man/growth.intervals.Rd
 8cbfd8eadcba08225cf547de64f33166 *man/is.fpt.density.rd
 65c5ff3aa51a74d923a5b87a77d7ebd3 *man/plot.fpt.density.Rd

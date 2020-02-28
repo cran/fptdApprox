@@ -203,6 +203,7 @@ m = 100, n = 250, p = 0.2, alpha = 1, skip = TRUE, tol = 0.001, it.max)
       	if ((m*sum(it) > it.max) & interactive()) {
 			M <- m - sapply(Skip, sum)
 			label1 <- character(1)
+      		label2 <- character(1)
 			if (!to.T){
 				logic <- sapply(Skip, function(s) all(!s))            		
 				if (any(logic)){

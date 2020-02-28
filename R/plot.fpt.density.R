@@ -52,10 +52,16 @@ function (x, from.t0, to.T, dp.legend = TRUE, dp.legend.cex = 1, ylab = TRUE, gr
     	pin.height <- par("pin")[2] - sum(par("mai")[c(1,3)]*(par("cex")-1))
     	if (dp.legend) {
 		dp.labels <- vector("list", 3)
-		if (ncp) dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), paste(t, "  in  ", group("[", 
-                							list(t0, T), "]"))), "}"), ~~X(t0) %~% id)), Args)))
-		else dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), paste(t, "  in  ", group("[", 
-                					list(t0, T), "]"))), "}"), ~~P(X(t0) == x0) == 1)), Args)))
+		if (ncp) dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), t %in% group("[", 
+                							list(t0, T), "]")), "}"), ~~X(t0) %~% id)), Args)))
+		else dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), t %in% group("[", 
+                					list(t0, T), "]")), "}"), ~~P(X(t0) == x0) == 1)), Args)))
+
+		#if (ncp) dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), paste(t, "  %in%  ", group("[", 
+            #    							list(t0, T), "]"))), "}"), ~~X(t0) %~% id)), Args)))
+		#else dp.labels[[1]] <- parse(text = deparse(substitute(paste(" Diffusion process: ", list(group("{", list(X(t), paste(t, "  %in% ", group("[", 
+            #    					list(t0, T), "]"))), "}"), ~~P(X(t0) == x0) == 1)), Args)))
+
 	  	logic <- sapply(Args, is.character)
 	  	Args[logic] <- sapply(Args[logic], function(x) parse(text = x)[[1]])
 		dpMean <- eval(parse(text = paste("substitute(", dp$mean, ", Args[logic])", sep = "")))

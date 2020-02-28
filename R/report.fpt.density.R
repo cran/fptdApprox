@@ -1,9 +1,7 @@
 report.fpt.density <-
-function (obj, report.sfptl = FALSE, tex = FALSE, digits = 8, 
-    ...) 
+function (obj, report.sfptl = FALSE, tex = FALSE, digits = 8, ...) 
 {
-	if (!is.fpt.density(obj)) 
-        stop(paste(sQuote("obj"), "is not of class", shQuote("fpt.density"))) 
+	if (!is.fpt.density(obj)) stop(paste(sQuote("obj"), "is not of class", shQuote("fpt.density"))) 
 
 	cp <- is.null(obj$y.x0)
     	A <- attr(obj, "Call")
@@ -203,7 +201,7 @@ function (obj, report.sfptl = FALSE, tex = FALSE, digits = 8,
 	to.T <- Args$to.T
 
 	m <- length(ArgsFPTL$x0)
-	if (Args$skip) jumps <- which(sapply(attr(obj, "skips"), identical, 1:m)) else jump <- integer(0)
+	if (Args$skip) jumps <- which(sapply(attr(obj, "skips"), identical, 1:m)) else jumps <- integer(0)
 	
 	nI <- length(attr(obj, "cumIntegral"))
     	index <- 1:nI
