@@ -39,9 +39,7 @@ The mathematical expressions of the transition probability density and distribut
 and \eqn{s}, \eqn{f(x,t|y,s)} and \eqn{F(x,t|y,s)}, respectively.
 
 In addition, all mathematical expressions may depend on generic parameters and functions of \eqn{t}, or \eqn{s} and \eqn{t},
-referred by name. To name the expression of a function \eqn{h(u)} we can use 
-\eqn{\grave{} \thinspace}{}\if{text}{`}\if{html}{\out{&#96;}}\code{h(u)}\eqn{\grave{}}{}\if{text}{`}\if{html}{\out{&#96;}}
-if we want to show its dependence on \eqn{u}, or \code{h} otherwise. \cr
+referred by name. To name the expression of a function \eqn{h(u)} we can use \code{`h(u)` = value} if we want to show its dependence on \eqn{u}, or \code{h} otherwise. \cr
 
 The function checks if the mathematical expressions show syntax errors and if \R can compute the symbolic derivative with respect 
 to \eqn{x} for the infinitesimal variance and transition probability density function. 

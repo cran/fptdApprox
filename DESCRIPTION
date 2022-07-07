@@ -3,13 +3,13 @@ Package: fptdApprox
 Type: Package
 Title: Approximation of First-Passage-Time Densities for Diffusion
         Processes
-Version: 2.2
-Date: 2020-02-28
+Version: 2.3
+Date: 2022-07-07
 Author: Patricia Román-Román, Juan J. Serrano-Pérez and Francisco Torres-Ruiz.
 Maintainer: Juan J. Serrano-Pérez <jjserra@ugr.es>
 Description: Efficient approximation of first-passage-time densities for diffusion processes based on the First-Passage-Time Location (FPTL) function.
 License: GPL-2
 NeedsCompilation: no
-Packaged: 2020-02-28 17:33:43 UTC; Usuario
+Packaged: 2022-07-07 05:47:47 UTC; JUANJO
 Repository: CRAN
-Date/Publication: 2020-02-28 18:50:02 UTC
+Date/Publication: 2022-07-07 06:10:02 UTC

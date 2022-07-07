@@ -10,7 +10,7 @@ function (x, y, zeroSlope = 0.01)
     slope <- (180/pi) * atan((y[index.growth.to] - y[index.growth.from])/(x[index.growth.to] - 
         x[index.growth.from]))
     l <- slope > zeroSlope
-    if (any(l))	    
+    if (any(l)) 
         return(cbind(index.growth.from[l], index.growth.to[l]))
     else return()
 }

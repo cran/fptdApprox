@@ -55,9 +55,7 @@ The mathematical expression of the boundary \code{S} should be a function of \eq
 shows syntax errors and if \R can compute its symbolic derivative with respect to \eqn{t}. \cr
 	
 The \code{env} argument is a list of tagged values in \code{name = value} form with \code{name} other than \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}.
-To name the expression of a function \eqn{h(u)} as a character string we can use 
-\eqn{\grave{} \thinspace}{}\if{text}{`}\if{html}{\out{&#96;}}\code{h(u)}\eqn{\grave{} \ }{}\if{text}{`}\if{html}{\out{&#96;}} \code{= value} 
-if we want to show its dependence on \eqn{u}, or \code{h = value} otherwise. \cr
+To name the expression of a function \eqn{h(u)} as a character string we can use \code{`h(u)` = value} if we want to show its dependence on \eqn{u}, or \code{h = value} otherwise. \cr
 
 The \code{env} argument is copied into a temporary environment for evaluating the mathematical expressions in objects \code{dp} and \code{S}. 
 \R looks for the objects not found into this temporary environment in the parent.frame() environment. 
