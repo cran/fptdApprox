@@ -38,16 +38,16 @@ for some \eqn{i}, \eqn{t_1^* - t_0 >> t_{max,1}^{-} - \thinspace t_1^*}{t[1]* - 
 \details{
 For a diffusion process \eqn{\{X(t), t_0 \leq t \leq T \}}{{X(t), t0 \le t \le T}}, the f.p.t. variable,   
 conditioned to \eqn{X(t_0) = x_0}{X(t0) = x0}, through a continuous boundary \eqn{S(t)} is defined as
-\ifelse{latex}{\deqn{T_{S(t), x_0} = \left\{
+\deqn{T_{S(t), x_0} = \left\{
 \begin{array}{lll}
-\mbox{Inf} \ \{ t \geq t_0 \ : \ X(t) > S(t) \negthinspace \mid \negthinspace X(t_0)=x_0 \} & & \mbox{if \ } x_0 < S(t_0) \vspace{5pt} \\
-\mbox{Inf} \ \{ t \geq t_0 \ : \ X(t) < S(t) \negthinspace \mid \negthinspace X(t_0)=x_0 \} & & \mbox{if \ } x_0 > S(t_0)
+Inf \ \{ t \geq t_0 \ : \ X(t) > S(t) \mid X(t_0)=x_0 \} & & if \ x_0 < S(t_0) \\[7pt]
+Inf \ \{ t \geq t_0 \ : \ X(t) < S(t) \mid X(t_0)=x_0 \} & & if \ x_0 > S(t_0)
 \end{array}
- \right.}}{\deqn{T = Inf{ t \ge t0 : X(t) > S(t) | X(t0) = x0 } ,} 
-if \eqn{x_0 < S(t_0)}{x0 < S(t0)}, and
-\deqn{T = Inf{ t \ge t0 : X(t) < S(t) | X(t0) = x0 } ,} 
-if \eqn{x_0 > S(t_0)}{x0 > S(t0)}. }
+ \right. .}{T(S(t), x0) = Inf \{t \ge t0 : X(t) > S(t) | X(t0) = x0\}, if x0 < S(t0),
+  
+and
 
+T(S(t), x0) = Inf \{t \ge t0 : X(t) < S(t) | X(t0) = x0\}, if x0 > S(t0).}
 Its density function is the solution to a Volterra integral equation of the second kind. The kernel of this equation depends
 on the infinitesimal moments of the process, the transition probability density function and the boundary. 
 

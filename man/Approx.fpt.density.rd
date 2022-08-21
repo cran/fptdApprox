@@ -62,18 +62,17 @@ previous calls to the functions \code{FPTL} and \code{summary.FPTL}. \cr
 
 For a diffusion process \eqn{\{X(t), t_0 \leq t \leq T \}}{{X(t), t0 \le t \le T}} with non-degenerate initial distribution 
 the unconditioned f.p.t. variable, through a continuous boundary \eqn{S(t)}, is defined as
-
-\ifelse{latex}{\deqn{T_{S(t), X(t_0)} = \left\{
+\deqn{T_{S(t), X(t_0)} = \left\{
 \begin{array}{lll}
-\mbox{Inf} \ \{ t \geq t_0 \ : \ X(t) > S(t) \} & & \mbox{if \ } X(t_0) < S(t_0) \vspace{5pt} \\
-\mbox{Inf} \ \{ t \geq t_0 \ : \ X(t) < S(t) \} & & \mbox{if \ } X(t_0) > S(t_0)
+Inf \ \{ t \geq t_0 \ : \ X(t) > S(t) \} & & if \ X(t_0) < S(t_0) \\[7pt]
+Inf \ \{ t \geq t_0 \ : \ X(t) < S(t) \} & & if \ X(t_0) > S(t_0)
 \end{array}
- \right.}}{\deqn{T = Inf{ t \ge t0 : X(t) > S(t)} ,} 
-if \eqn{X(t0) < S(t0)}, and
-\deqn{T = Inf{ t \ge t0 : X(t) < S(t)} ,} 
-if \eqn{X(t0) > S(t0)}.}
+ \right. ,}{T(S(t), X(t0)) = Inf \{t \ge t0 : X(t) > S(t)\} , if X(t0) < S(t0), 
 
-and its density function can be obtained by means of the numerical integration, in the range of variation of \eqn{X(t_0)}{X(t0)}, 
+and
+
+T(S(t), X(t0)) = Inf \{t \ge t0 : X(t) < S(t)\} , if X(t0) > S(t0).}
+Its density function can be obtained by means of the numerical integration, in the range of variation of \eqn{X(t_0)}{X(t0)}, 
 of the corresponding f.p.t. densities conditioned to values of \eqn{X(t_0)}{X(t0)}, weighted by the initial density function. \cr
 
 For each conditioned problem related to an unconditioned f.p.t. problem, the \code{Approx.fpt.density} function makes internal calls to  

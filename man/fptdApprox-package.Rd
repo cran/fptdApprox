@@ -15,8 +15,8 @@ For a complete list of functions, use library(help=\dQuote{fptdApprox}).
 \tabular{ll}{
 Package: \tab fptdApprox\cr
 Type: \tab Package\cr
-Version: \tab 2.3\cr
-Date: \tab 2022-07-07\cr
+Version: \tab 2.4\cr
+Date: \tab 2022-08-21\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

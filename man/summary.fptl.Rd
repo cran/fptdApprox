@@ -48,7 +48,7 @@ should be reached to consider that it begins to increase significantly.
 bigger than or equal to \deqn{p_{max,i}^{-} = p_{max,i} \big( 1 - 0.05(p_{max,i} - p_i) \big) \ .}{pmax[i]^- = pmax[i](1 - 0.05(pmax[i] - p[i])) .}
 \item The last time instant \eqn{t_{max,i}^{+} \in \big[ t_{max,i}, \thinspace T_i \big]}{tmax[i]^+ in [tmax[i], T[i]]} at which the FPTL function is bigger
 than or equal to \deqn{p_{max,i}^{+} = max \left\{ 1 - (1 - p_{max,i}^2)^{(1+q)/2}, FPTL(T_i) \right\},}{pmax[i]^+
-= max { 1 - (1 - pmax[i]^2)^{(1+q)/2}, FPTL(T[i])} ,}
+= max {1 - (1 - pmax[i]^2)^{(1+q)/2}, FPTL(T[i])} ,}
 where \deqn{T_i = min \big\{ t_{max,i} + k \thinspace (t_{max,i}-t_i^*)(1 - p_{max,i}),
 \thinspace t_{i+1} \big\}}{T[i] = min(tmax[i] + k (tmax[i] - t[i]*)(1 - pmax[i]), t[i+1])} and
 \deqn{q = \displaystyle{\frac{p_{max,i} - p_i}{p_{max,i}}} \ . }{q = (pmax[i] - p[i])/pmax[i] .}

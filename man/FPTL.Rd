@@ -34,16 +34,17 @@ is.fptl(obj)
 \details{
 The FPTL function for the problem of the first-passage-time of a diffusion process \eqn{\{X(t), t_0 \leq t \leq T \}}{{X(t), t0 \le t \le T}},  
 conditioned to \eqn{X(t_0) = x_0}{X(t0) = x0}, through a continuous boundary \eqn{S(t)} is defined as
-\ifelse{latex}{\deqn{FPTL(t) = \left\{
+\deqn{FPTL(t) = \left\{
 \begin{array}{lll}
-P[ X(t)>S(t) \thinspace | \thinspace X(t_0)=x_0] = 1 - F(S(t),t|x_0,t_0) & & \mbox{if \ } x_0 < S(t_0) \vspace{5pt} \\
-P[ X(t)<S(t) \thinspace | \thinspace X(t_0)=x_0] = F(S(t),t|x_0,t_0) & & \mbox{if \ } x_0 > S(t_0)
+P[ X(t)>S(t) \, | \, X(t_0)=x_0] = 1 - F(S(t),t \, | \, x_0,t_0) & & if \ x_0 < S(t_0) \\[7pt]
+P[ X(t)<S(t) \, | \, X(t_0)=x_0] = F(S(t),t \, | \, x_0,t_0) & & if \ x_0 > S(t_0)
 \end{array}
- \right. \ , }}{\deqn{FPTL(t) = P[X(t)>S(t)|X(t0)=x0] = 1 - F(S(t),t|x0,t0) ,} 
-if \eqn{x_0 < S(t_0)}{x0 < S(t0)}, and
-\deqn{FPTL(t) = P[X(t)<S(t)|X(t0)=x0] = F(S(t),t|x0,t0) ,} 
-if \eqn{x_0 > S(t_0)}{x0 > S(t0)}, }
-where \eqn{F(x,t|y,s)}{F(x,t|y,s)} is the transition probability distribution function of the process.  \cr
+ \right. ,}{FPTL(t) = P[X(t)>S(t)|X(t0)=x0] = 1 - F(S(t),t|x0,t0), if x0 < S(t0), 
+
+and
+
+FPTL(t) = P[X(t)<S(t)|X(t0)=x0] = F(S(t),t|x0,t0), if x0 > S(t0),}
+where \eqn{F(x,t|y,s)} is the transition probability distribution function of the process.  \cr
 
 Initially, the FPTL function is evaluated at a sequence of n equally spaced values from \code{t0} to \code{T}. 
 Then the \code{FPTL} function makes an internal call to the \code{\link{growth.intervals}} function in order to study the growth
@@ -53,7 +54,7 @@ to the abovementioned study. \cr
 The mathematical expression of the boundary \code{S} should be a function of \eqn{t} and may include arguments \code{t0},
 \code{x0} and the parameters specified in the \code{env} argument. The \code{FPTL} function checks if the mathematical expression 
 shows syntax errors and if \R can compute its symbolic derivative with respect to \eqn{t}. \cr
-	
+	                                                      
 The \code{env} argument is a list of tagged values in \code{name = value} form with \code{name} other than \eqn{x}, \eqn{t}, \eqn{y} and \eqn{s}.
 To name the expression of a function \eqn{h(u)} as a character string we can use \code{`h(u)` = value} if we want to show its dependence on \eqn{u}, or \code{h = value} otherwise. \cr
 

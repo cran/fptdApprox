@@ -1,4 +1,4 @@
-fc7e2e169727a2d2868fc3c3d5997b5f *DESCRIPTION
+22817b9acf5d8dd6b22a10edd1b3abad *DESCRIPTION
 7ec647535d6f1f79015ae7e50074fc9e *NAMESPACE
 05a5a89135a736909a907dbfd7a44330 *R/Approx.cfpt.density.R
 cfb133a8083cc00ae6f7eee616912d51 *R/Approx.fpt.density.R
@@ -21,12 +21,17 @@ c0a8642bb5108fd39ed2bf02f4d8fc66 *R/report.R
 25f94044df23878bfa6de7475afcdf2e *R/report.fpt.density.R
 96d0933b6f736e3885b4afce51f11b89 *R/report.summary.fptl.R
 f08c1aa44ad0d06d6b0796ad9d793200 *R/summary.fptl.R
-2b7fad29b0cc809c09fef383b83a571d *man/Approx.cfpt.density.rd
-cdacb07574b7882ebfb4b08cfe424394 *man/Approx.fpt.density.rd
-4f7670e251e1593bbd5d15ab50b4fc13 *man/FPTL.Rd
-59d717ee654f03f96e28c8d7700770ba *man/Integration.Steps.Rd
+96b8215e6d1cec0622552d2abf34fe9a *demo/00Index
+f68518f9838a221d6f026cbc1c737450 *demo/LogNormal.r
+e7862f2fd45b25247fa1019a3c130a4c *demo/NewGompertz.r
+9560b6f571f44af016d47ba5a0277516 *demo/OrnsteinUhlenbeck.r
+482451f9dc77f4df94a086cc6cd04630 *demo/Wiener.r
+6e4d7e35abb4f5b90c4cef4850f3cd69 *man/Approx.cfpt.density.rd
+e41e1ce5d1d5e03a3a8174b866210f16 *man/Approx.fpt.density.rd
+3410b03ebc9779345c253ff8a444b95f *man/FPTL.Rd
+d73fc9b31e1f297c97d6d92cbe83642a *man/Integration.Steps.Rd
 d45d41b842f541a5e840a69c09ae42df *man/diffproc.Rd
-bba6426f65dc5c2ad532e8d872ead4ef *man/fptdApprox-package.Rd
+ca4650df90971445940c71fb61151e04 *man/fptdApprox-package.Rd
 bc3d4f4de46ef9961010d311e1ee5e0d *man/growth.intervals.Rd
 8cbfd8eadcba08225cf547de64f33166 *man/is.fpt.density.rd
 65c5ff3aa51a74d923a5b87a77d7ebd3 *man/plot.fpt.density.Rd
@@ -35,4 +40,4 @@ f2ea6b4ba8128f2629728a9a066aea94 *man/print.fpt.density.rd
 3a53e06f21c86bb09e9190c8c170b474 *man/report.Rd
 6e0362504d308134a5e362332b2034b0 *man/report.fpt.density.Rd
 425c2c766275c8c441f352329af15d1b *man/report.summary.fptl.Rd
-f78155224b1a5e6fbdea4e7815a8e4ad *man/summary.fptl.Rd
+61b7f591028e4fb08183f22471c275d7 *man/summary.fptl.Rd
